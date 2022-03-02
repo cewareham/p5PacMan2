@@ -18,6 +18,8 @@ let cc = {
   SCREENSIZE   : -1,  // placeholder, calc'ed below
   BLACK        : 'black',
   YELLOW       : 'yellow',
+  WHITE        : 'white',
+  RED          : 'red',
 
   STOP         : 0,
   UP           : 1,

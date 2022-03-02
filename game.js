@@ -2,6 +2,8 @@ class Game {
   constructor() {
     this.pacman = new Pacman();
     this.lastdT = 0;
+    this.nodes = new NodeGroup();
+    this.nodes.setupTestNodes();
   }
   
   update = () => {
@@ -15,6 +17,7 @@ class Game {
   
   render = () => {
     background(cc.BLACK);
+    this.nodes.render();
     this.pacman.render();
   }
 }
