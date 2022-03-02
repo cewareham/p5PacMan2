@@ -2,8 +2,7 @@ class Game {
   constructor() {
     this.lastdT = 0;
     this.nodes = new NodeGroup();
-    this.nodes.setupTestNodes();
-    this.pacman = new Pacman(this.nodes.nodeList[0]);
+    this.pacman = new Pacman(this.nodes.getStartTempNode());
   }
   
   update = () => {

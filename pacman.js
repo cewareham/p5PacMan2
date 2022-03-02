@@ -4,7 +4,7 @@ class Pacman {
     //this.position = new Vector2(200, 400);
     this.dirVectors = {UP:new Vector2(0, -1), DOWN:new Vector2(0, 1), LEFT:new Vector2(-1,0), RIGHT:new Vector2(1,0),STOP:new Vector2()};
     this.dirString = "STOP";
-    this.speed = 100;
+    this.speed = 50;
     this.radius = 10;
     this.diam = this.radius*2;
     this.color = cc.YELLOW;

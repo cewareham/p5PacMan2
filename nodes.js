@@ -26,36 +26,103 @@ class Node {
 class NodeGroup {
   constructor() {
     this.nodeList = [];
+    this.nodesLUT = {};
+    this.nodeSymbols = ['+'];
+    this.pathSymbols = ['.'];
+    this.createNodeTable(maze);
+    this.connectHorizontally(maze);
+    this.connectVertically(maze);
   }
-  
-  setupTestNodes() {
-    let nodeA = new Node(80 ,80);
-    let nodeB = new Node(160, 80);
-    let nodeC = new Node(80, 160);
-    let nodeD = new Node(160, 160);
-    let nodeE = new Node(208, 160);
-    let nodeF = new Node(80, 320);
-    let nodeG = new Node(208, 320);
-    nodeA.neighborNodes["RIGHT"] = nodeB; // neighbor node to right
-    nodeA.neighborNodes["DOWN"] = nodeC;  // neighbor node down
-    nodeB.neighborNodes["LEFT"] = nodeA;  // neighbor node to left, etc.
-    nodeB.neighborNodes["DOWN"] = nodeD;
-    nodeC.neighborNodes["UP"] = nodeA;
-    nodeC.neighborNodes["RIGHT"] = nodeD;
-    nodeC.neighborNodes["DOWN"] = nodeF;
-    nodeD.neighborNodes["UP"] = nodeB;
-    nodeD.neighborNodes["LEFT"] = nodeC;
-    nodeD.neighborNodes["RIGHT"] = nodeE;
-    nodeE.neighborNodes["LEFT"] = nodeD;
-    nodeE.neighborNodes["DOWN"] = nodeG;
-    nodeF.neighborNodes["UP"] = nodeC;
-    nodeF.neighborNodes["RIGHT"] = nodeG;
-    nodeG.neighborNodes["UP"] = nodeE;
-    nodeG.neighborNodes["LEFT"] = nodeF;
-    this.nodeList = [nodeA, nodeB, nodeC, nodeD, nodeE, nodeF, nodeG];
+
+  createNodeTable(data, xoffset=0, yoffset=0) {
+    let row, col;
+    for (row=0; row<data.length; row++) {
+      for (col=0; col<data[row].length; col++) {
+        // is char from maze in this.nodeSymbols array?
+        if (this.nodeSymbols.indexOf(data[row][col]) != -1) {
+          let coord = this.constructKey(col+xoffset, row+yoffset);
+          this.nodesLUT[coord.x+"-"+coord.y] = new Node(coord.x, coord.y);
+        }
+      }
+    }
   }
-  
+
+  connectHorizontally(data, xoffset=0, yoffset=0) {
+    let row, col, key, otherkey, coord;
+    for (row=0; row<data.length; row++) {
+      key = null;
+      for (col=0; col<data[row].length; col++) {
+        // is char from maze in this.nodeSymbols array?
+        if (this.nodeSymbols.indexOf(data[row][col]) != -1) {
+          if (key == null) {
+            coord = this.constructKey(col+xoffset, row+yoffset);
+            key = coord.x+"-"+coord.y;
+          } else {
+            coord = this.constructKey(col+xoffset, row+yoffset);
+            otherkey = coord.x+"-"+coord.y;
+            this.nodesLUT[key].neighborNodes["RIGHT"] = this.nodesLUT[otherkey];
+            this.nodesLUT[otherkey].neighborNodes["LEFT"] = this.nodesLUT[key];
+            key = otherkey;
+          }
+        } else if (this.pathSymbols.indexOf(data[row][col]) == -1) {
+          key = null;
+        }
+      }
+    }
+  }
+
+  connectVertically(data, xoffset=0, yoffset=0) {
+    let row, col, key, otherkey, coord;
+    let dataT = this.transpose(data);
+    for (col=0; col<dataT.length; col++) {
+      key = null;
+      for (row=0; row<dataT[col].length; row++) {
+        if (this.nodeSymbols.indexOf(dataT[col][row]) != -1) {
+          if (key == null) {
+            coord = this.constructKey(col+xoffset, row+yoffset);
+            key = coord.x+"-"+coord.y;
+          } else {
+            coord = this.constructKey(col+xoffset, row+yoffset);
+            otherkey = coord.x+"-"+coord.y;
+            this.nodesLUT[key].neighborNodes["DOWN"] = this.nodesLUT[otherkey]
+            this.nodesLUT[otherkey].neighborNodes["UP"] = this.nodesLUT[key]
+            key = otherkey
+          }
+        } else if (this.pathSymbols.indexOf(dataT[col][row]) == -1) {
+          key = null;
+        }
+      }
+    }
+  }
+
+  //src: https://stackoverflow.com/questions/17428587/transposing-a-2d-array-in-javascript
+  transpose(matrix) {
+    const rows = matrix.length, cols = matrix[0].length;
+    const grid = [];
+    for (let j = 0; j < cols; j++) {
+      grid[j] = Array(rows);
+    }
+    for (let i = 0; i < rows; i++) {
+      for (let j = 0; j < cols; j++) {
+        grid[j][i] = matrix[i][j];
+      }
+    }
+    return grid;
+  }
+
+  constructKey(x, y) {
+    return {x:x*cc.TILEWIDTH, y:y*cc.TILEHEIGHT};
+  }
+
+  // return 1st node in this.nodesLUT object
+  getStartTempNode = () => {
+    // convert values in this.nodesLUT to array
+    let nodes = Object.values(this.nodesLUT);
+    return nodes[0];  // return 1st array entry
+  }
+
   render = () => {
-    this.nodeList.forEach(node => node.render());
+    let nodes = Object.values(this.nodesLUT);
+    nodes.forEach(node => node.render());
   }
 }

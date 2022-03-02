@@ -48,7 +48,10 @@ class Vector2 {
     return {x:this.x, y:this.y};
   }
   asInt() {
-    return {x:parseInt(this.x), y:parseInt(this.y)};
+    // python int() truncates decimal portion so we us JS floor()
+    return {x:Math.floor(this.x), y:Math.floor(this.y)};
+    //return {x:parseInt(this.x), y:parseInt(this.y)};
+    //return {x:this.x, y:this.y};
   }
   // p5.js already has str() function so must rename
   strng() {
