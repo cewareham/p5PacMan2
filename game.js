@@ -1,9 +1,9 @@
 class Game {
   constructor() {
-    this.pacman = new Pacman();
     this.lastdT = 0;
     this.nodes = new NodeGroup();
     this.nodes.setupTestNodes();
+    this.pacman = new Pacman(this.nodes.nodeList[0]);
   }
   
   update = () => {

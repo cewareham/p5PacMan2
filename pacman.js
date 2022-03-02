@@ -1,25 +1,101 @@
 class Pacman {
-  constructor() {
-    this.position = new Vector2(200, 400);
+  constructor(node) {
+    this.name = "PACMAN";
+    //this.position = new Vector2(200, 400);
+    this.dirVectors = {UP:new Vector2(0, -1), DOWN:new Vector2(0, 1), LEFT:new Vector2(-1,0), RIGHT:new Vector2(1,0),STOP:new Vector2()};
+    this.dirString = "STOP";
+    this.speed = 100;
     this.radius = 10;
     this.diam = this.radius*2;
     this.color = cc.YELLOW;
-    this.dirVectors = {STOP:new Vector2(), UP:new Vector2(0, -1), DOWN:new Vector2(0, 1), LEFT:new Vector2(-1,0), RIGHT:new Vector2(1,0)};
-    this.dirString = "STOP";
-    this.dirVector = this.dirVectors[this.dirString]; // or getDirectionVector(this.dirString)
-    this.speed = 100;
+    this.node = node;
+    this.setPosition();
+    this.targetNode = node;
+
+    //this.dirVector = this.dirVectors[this.dirString]; // or getDirectionVector(this.dirString)
+  }
+
+  setPosition() {
+    this.positionVector = this.node.position.cpy();
   }
   
   update = (dt) => {
     let dirVector = this.getDirectionVector(this.dirString);
     let dPos = dirVector.mul(this.speed);
     dPos = dPos.mul(dt);
-    this.position = this.position.add(dPos);
-    this.dirString = this.getValidKey();
+    this.positionVector = this.positionVector.add(dPos);
+    let dirString = this.getValidKey();
+    if (this.overshotTarget()) {
+      this.node = this.targetNode;
+      this.targetNode = this.getNewTarget(dirString);
+      if (this.targetNode != this.node) {
+        this.dirString = dirString;
+      } else {
+        this.targetNode = this.getNewTarget(this.dirString);
+        if (this.targetNode == this.node) this.dirString = "STOP";
+        this.setPosition();
+      }
+    } else {
+      if (this.oppositeDirection(dirString)) this.reverseDirection();
+    }
+  }
+
+  // get key value from cc.DIR that is
+  // opposite direction of direction parameter
+  oppDirection(dirString) {
+    let dir = cc.DIR[dirString];
+    let oppdir = dir * -1;
+    // getKeyValue(..) is in sketch.js
+    let oppKey = getKeyValue(cc.DIR, oppdir);
+    return oppKey;
+  }
+
+  reverseDirection() {
+    this.dirString = this.oppDirection(this.dirString);
+    let temp = this.node;
+    this.node = this.targetNode;
+    this.targetNode = temp;
+  }
+
+  // is pacman's direction opposite of a specified direction?
+  oppositeDirection(dirString) {
+    if (dirString != "STOP") {
+      let dir = cc.DIR[dirString];
+      let thisdir = cc.DIR[this.dirString];
+      if (dir == thisdir * -1) {
+        return true;
+      }
+    }
+    return false;
+  }
+  
+  overshotTarget() {
+    if (this.targetNode != null) {
+      let vec1 = (this.targetNode.position).sub(this.node.position);
+      let vec2 = (this.positionVector).sub(this.node.position);
+      let node2Target = vec1.magnitudeSquared();
+      let node2Self = vec2.magnitudeSquared();
+      return node2Self >= node2Target;
+    }
+    return false;
+  }
+
+  validDirection(dirString) {
+    if (dirString != "STOP") {
+      if (this.node.neighborNodes[dirString] != null) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  getNewTarget(dirString) {
+    if (this.validDirection(dirString)) return this.node.neighborNodes[dirString];
+    return this.node;
   }
 
   render = () => {
-    let p = this.position.asInt();  // returns object
+    let p = this.positionVector.asInt();  // returns object
     fill(this.color);
     circle(p.x, p.y, this.diam);
   }
