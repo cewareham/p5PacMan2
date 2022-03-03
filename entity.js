@@ -54,7 +54,7 @@ class Entity {
 
     getNewTarget(dirString) {
     if (this.validDirection(dirString)) {
-        return this.node.neighbors[dirString];
+        return this.node.neighborNodes[dirString];
     }
     return this.node
     }
@@ -78,7 +78,7 @@ class Entity {
       }
   
     validDirection(dirString) {
-        if (direction != "STOP") {
+        if (dirString != "STOP") {
             if (this.node.neighborNodes[dirString] != null) return true;
         }
         return false;
@@ -104,28 +104,9 @@ class Entity {
     // python randint(3, 9) -> return number between 3 & 9 (both included)
     // p5.js   random(3, 9) -> return number between 3 (inclusive) & 9 (exclusive)
     randomDirection(directions) {
-        return directions[random(0, directions.length)];
+        return directions[Math.floor(random(0, directions.length))];
     }
-/*
-    def validDirections(self):
-        directions = []
-        for key in [UP, DOWN, LEFT, RIGHT]:
-            if self.validDirection(key):
-                if key != self.direction * -1:
-                    directions.append(key)
-        if len(directions) == 0:
-            directions.append(self.direction * -1)
-        return directions
 
-    def randomDirection(self, directions):
-        return directions[randint(0, len(directions)-1)]
-
-    def oppositeDirection(self, direction):
-        if direction is not STOP:
-            if direction == self.direction * -1:
-                return True
-        return False
-*/
     oppositeDirection(dirString) {
         if (direction != "STOP") {
             let dir = cc.DIR[dirString];

@@ -5,6 +5,7 @@ class Game {
     this.nodes.setPortalPair({x:0, y:17}, {x:27, y:17});
     this.pacman = new Pacman(this.nodes.getStartTempNode());
     this.pellets = new PelletGroup(maze1);
+    this.ghost = new Ghost(this.nodes.getStartTempNode());
   }
 
   checkPelletEvents() {
@@ -24,6 +25,7 @@ class Game {
     this.lastdT = wpn;
     dt /= 1000.00;                // secs since last time this line called
     this.pacman.update(dt);
+    this.ghost.update(dt);
     this.pellets.update(dt);
     this.checkPelletEvents();
   }
@@ -33,5 +35,6 @@ class Game {
     this.nodes.render();
     this.pellets.render();
     this.pacman.render();
+    this.ghost.render();
   }
 }
