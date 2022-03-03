@@ -2,7 +2,9 @@ class Pacman extends Entity {
   constructor(node) {
     super(node);
     this.name = "PACMAN";
+    // previously this.directions
     this.dirVectors = {UP:new Vector2(0, -1), DOWN:new Vector2(0, 1), LEFT:new Vector2(-1,0), RIGHT:new Vector2(1,0), STOP:new Vector2()};
+    // previously this.direction
     this.dirString = "STOP";
     this.speed = 100;
     this.radius = 10;
@@ -11,6 +13,7 @@ class Pacman extends Entity {
     this.color = cc.YELLOW;
     this.node = node;
     this.setPosition();
+    // previously this.target
     this.targetNode = node;
 
     //this.dirVector = this.dirVectors[this.dirString]; // or getDirectionVector(this.dirString)
@@ -56,16 +59,6 @@ class Pacman extends Entity {
     } else {
       if (this.oppositeDirection(dirString)) this.reverseDirection();
     }
-  }
-
-  // get key value from cc.DIR that is
-  // opposite direction of direction parameter
-  oppDirection(dirString) {
-    let dir = cc.DIR[dirString];
-    let oppdir = dir * -1;
-    // getKeyValue(..) is in sketch.js
-    let oppKey = getKeyValue(cc.DIR, oppdir);
-    return oppKey;
   }
 
   reverseDirection() {

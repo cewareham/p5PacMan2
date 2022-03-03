@@ -13,6 +13,19 @@ class Entity {
         this.targetNode = node;
         this.visible = true;
         this.disablePortal = false;
+        this.goalVector = null;
+        this.directionMethod = this.randomDirection;
+    }
+
+    goalDirection(dirVectors) {
+        let distances = [];
+        for (let dirString of dirVectors) {
+            let vec = this.node.position.add(this.dirVectors[dirString].mul(cc.TILEWIDTH));
+            vec = vec.sub(this.goalVector);
+            distances.push(vec.magnitudeSquared());
+        }
+        let index = distances.indexOf(min(distances));
+        return dirVectors[index];
     }
   
     update = (dt) => {
@@ -24,7 +37,7 @@ class Entity {
         if (this.overshotTarget()) {
             this.node = this.targetNode;
             let directions = this.validDirections();
-            let dirString = this.randomDirection(directions);
+            let dirString = this.directionMethod(directions);
             if (!this.disablePortal) {
                 if (this.node.neighborNodes["PORTAL"] != null) {
                     this.node = this.node.neighborNodes["PORTAL"];
@@ -70,8 +83,18 @@ class Entity {
         return false;
     }
 
+    // get key value from cc.DIR that is
+    // opposite direction of direction parameter
+    oppDirection(dirString) {
+        let dir = cc.DIR[dirString];
+        let oppdir = dir * -1;
+        // getKeyValue(..) is in sketch.js
+        let oppKey = getKeyValue(cc.DIR, oppdir);
+        return oppKey;
+    }
+
     reverseDirection() {
-        this.dirString = oppDirection(this.dirString);  // oppDirection() in sketch.js
+        this.dirString = oppDirection(this.dirString);  // oppDirection() in this.file
         let temp = this.node;
         this.node = this.targetNode;
         this.targetNode = temp;
@@ -96,7 +119,7 @@ class Entity {
             }
         }
         if (directions.length == 0) {
-            directions.push(oppDirection(this.dirString));  // oppDirection in sketch.js
+            directions.push(oppDirection(this.dirString));  // oppDirection in this.file
         }
         return directions;
     }
