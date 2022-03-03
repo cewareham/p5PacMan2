@@ -1,7 +1,7 @@
 class Node {
   constructor(x, y) {
     this.position = new Vector2(x, y);
-    this.neighborNodes = {UP:null, DOWN:null, LEFT:null, RIGHT:null};
+    this.neighborNodes = {UP:null, DOWN:null, LEFT:null, RIGHT:null, PORTAL:null};
   }
   
   render = () => {
@@ -24,14 +24,27 @@ class Node {
 }
 
 class NodeGroup {
-  constructor() {
+  constructor(maze) {
+    this.maze = maze;
     this.nodeList = [];
     this.nodesLUT = {};
     this.nodeSymbols = ['+'];
     this.pathSymbols = ['.'];
-    this.createNodeTable(maze);
-    this.connectHorizontally(maze);
-    this.connectVertically(maze);
+    this.createNodeTable(this.maze);
+    this.connectHorizontally(this.maze);
+    this.connectVertically(this.maze);
+  }
+
+  setPortalPair(pair1, pair2) {
+    let coord1 = this.constructKey(pair1.x, pair1.y);
+    let key1 = coord1.x+"-"+coord1.y;
+    let coord2 = this.constructKey(pair2.x, pair2.y);
+    let key2 = coord2.x+"-"+coord2.y;
+    let keys = Object.keys(this.nodesLUT);
+    if ((keys.indexOf(key1) != -1) && (keys.indexOf(key2) != -1)) {
+      this.nodesLUT[key1].neighborNodes["PORTAL"] = this.nodesLUT[key2];
+      this.nodesLUT[key2].neighborNodes["PORTAL"] = this.nodesLUT[key1];
+    }
   }
 
   createNodeTable(data, xoffset=0, yoffset=0) {

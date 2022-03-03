@@ -1,7 +1,8 @@
 class Game {
   constructor() {
     this.lastdT = 0;
-    this.nodes = new NodeGroup();
+    this.nodes = new NodeGroup(maze1);
+    this.nodes.setPortalPair({x:0, y:17}, {x:27, y:17});
     this.pacman = new Pacman(this.nodes.getStartTempNode());
   }
   

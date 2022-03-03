@@ -1,10 +1,9 @@
 class Pacman {
   constructor(node) {
     this.name = "PACMAN";
-    //this.position = new Vector2(200, 400);
-    this.dirVectors = {UP:new Vector2(0, -1), DOWN:new Vector2(0, 1), LEFT:new Vector2(-1,0), RIGHT:new Vector2(1,0),STOP:new Vector2()};
+    this.dirVectors = {UP:new Vector2(0, -1), DOWN:new Vector2(0, 1), LEFT:new Vector2(-1,0), RIGHT:new Vector2(1,0), STOP:new Vector2()};
     this.dirString = "STOP";
-    this.speed = 50;
+    this.speed = 100;
     this.radius = 10;
     this.diam = this.radius*2;
     this.color = cc.YELLOW;
@@ -18,6 +17,10 @@ class Pacman {
   setPosition() {
     this.positionVector = this.node.position.cpy();
   }
+
+  getDirectionVector(dirString) {
+    return this.dirVectors[dirString];
+  }
   
   update = (dt) => {
     let dirVector = this.getDirectionVector(this.dirString);
@@ -27,14 +30,17 @@ class Pacman {
     let dirString = this.getValidKey();
     if (this.overshotTarget()) {
       this.node = this.targetNode;
+      if (this.node.neighborNodes["PORTAL"] != null) {
+        this.node = this.node.neighborNodes["PORTAL"];
+      }
       this.targetNode = this.getNewTarget(dirString);
       if (this.targetNode != this.node) {
         this.dirString = dirString;
       } else {
         this.targetNode = this.getNewTarget(this.dirString);
-        if (this.targetNode == this.node) this.dirString = "STOP";
-        this.setPosition();
       }
+      if (this.targetNode == this.node) this.dirString = "STOP";
+      this.setPosition();
     } else {
       if (this.oppositeDirection(dirString)) this.reverseDirection();
     }
@@ -98,10 +104,6 @@ class Pacman {
     let p = this.positionVector.asInt();  // returns object
     fill(this.color);
     circle(p.x, p.y, this.diam);
-  }
-
-  getDirectionVector(dirString) {
-    return this.dirVectors[dirString];
   }
   
   getValidKey = () => {
