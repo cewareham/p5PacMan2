@@ -31,6 +31,8 @@ let cc = {
   DIR : {UP: 1, DOWN: -1, LEFT: 2, RIGHT: -2},
 
   PACMAN       : 0,
+  PELLET       : 1,
+  POWERPELLET  : 2
 }
 cc.SCREENWIDTH = cc.NCOLS*cc.TILEWIDTH;    // 448
 cc.SCREENHEIGHT = cc.NROWS*cc.TILEHEIGHT;  // 576

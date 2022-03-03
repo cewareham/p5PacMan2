@@ -26,10 +26,9 @@ class Node {
 class NodeGroup {
   constructor(maze) {
     this.maze = maze;
-    this.nodeList = [];
     this.nodesLUT = {};
-    this.nodeSymbols = ['+'];
-    this.pathSymbols = ['.'];
+    this.nodeSymbols = ['+', 'P', 'n'];
+    this.pathSymbols = ['.', '-', '|', 'p'];
     this.createNodeTable(this.maze);
     this.connectHorizontally(this.maze);
     this.connectVertically(this.maze);
