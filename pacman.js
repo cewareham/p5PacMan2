@@ -5,6 +5,7 @@ class Pacman {
     this.dirString = "STOP";
     this.speed = 100;
     this.radius = 10;
+    this.collideRadius = 5;
     this.diam = this.radius*2;
     this.color = cc.YELLOW;
     this.node = node;
@@ -12,6 +13,16 @@ class Pacman {
     this.targetNode = node;
 
     //this.dirVector = this.dirVectors[this.dirString]; // or getDirectionVector(this.dirString)
+  }
+
+  eatPellets(pelletList) {
+    for (let pellet of pelletList) {
+      let d = this.positionVector.sub(pellet.position);
+      let dSquared = d.magnitudeSquared();
+      let rSquared = Math.pow(pellet.radius+this.collideRadius, 2);
+      if (dSquared <= rSquared) return pellet;
+    }
+    return null;
   }
 
   setPosition() {

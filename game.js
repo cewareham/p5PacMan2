@@ -7,6 +7,16 @@ class Game {
     this.pellets = new PelletGroup(maze1);
   }
 
+  checkPelletEvents() {
+    let list = this.pellets.pelletList;
+    let pellet = this.pacman.eatPellets(list);
+    if (pellet) {
+      this.pellets.numEaten += 1;
+      const idx = list.indexOf(pellet);
+      if (idx > -1) list.splice(idx, 1);
+    }
+  }
+
   update = () => {
     // return amount of time passed since last time this line was called
     let wpn = window.performance.now();
@@ -15,6 +25,7 @@ class Game {
     dt /= 1000.00;                // secs since last time this line called
     this.pacman.update(dt);
     this.pellets.update(dt);
+    this.checkPelletEvents();
   }
   
   render = () => {
