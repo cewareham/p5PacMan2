@@ -33,7 +33,12 @@ let cc = {
   PACMAN       : 0,
   PELLET       : 1,
   POWERPELLET  : 2,
-  GHOST        : 3
+  GHOST        : 3,
+
+  SCATTER      : 0,
+  CHASE        : 1,
+  FREIGHT      : 2,
+  SPAWN        : 3
 }
 cc.SCREENWIDTH = cc.NCOLS*cc.TILEWIDTH;    // 448
 cc.SCREENHEIGHT = cc.NROWS*cc.TILEHEIGHT;  // 576

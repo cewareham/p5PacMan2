@@ -5,7 +5,7 @@ class Game {
     this.nodes.setPortalPair({x:0, y:17}, {x:27, y:17});
     this.pacman = new Pacman(this.nodes.getStartTempNode());
     this.pellets = new PelletGroup(maze1);
-    this.ghost = new Ghost(this.nodes.getStartTempNode());
+    this.ghost = new Ghost(this.nodes.getStartTempNode(), this.pacman);
   }
 
   checkPelletEvents() {

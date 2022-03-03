@@ -28,7 +28,8 @@ class Entity {
         return dirVectors[index];
     }
   
-    update = (dt) => {
+    // don't use arrow function here or won't work!
+    update(dt) {
         let dir = this.dirVectors[this.dirString];
         let dPos = dir.mul(this.speed);
         dPos = dPos.mul(dt);
