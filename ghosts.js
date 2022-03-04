@@ -23,4 +23,17 @@ class Ghost extends Entity {
     chase() {
         this.goalVector = this.pacman.positionVector;
     }
+
+    startFreight() {
+        this.mode.setFreightMode();
+        if (this.mode.current == cc.FREIGHT) {
+            this.setSpeed(50);
+            this.directionMethod = this.goalDirection;
+        }
+    }
+
+    normalMode() {
+        this.setSpeed(100);
+        this.directionMethod = this.goalDirection;
+    }
 }

@@ -36,6 +36,24 @@ class ModeController {
 
     update = (dt) => {
         this.mainmode.update(dt);
-        this.current = this.mainmode.mode;
+        if (this.current == cc.FREIGHT) {
+            this.timer += dt;
+            if (this.timer >= this.time) {
+                this.time = null;
+                this.entity.normalMode();
+                this.current = this.mainmode.mode;
+            }
+        } else {
+            this.current = this.mainmode.mode;
+        }
+    }
+
+    setFreightMode() {
+        let ary = [cc.SCATTER, cc.CHASE];
+        if (ary.includes(this.current)) {
+            this.timer = 0;
+            this.time = 7;
+            this.current = cc.FREIGHT;
+        } else if (this.current == cc.FREIGHT) this.timer = 0;
     }
 }

@@ -18,6 +18,7 @@ class Game {
       this.pellets.numEaten += 1;
       const idx = list.indexOf(pellet);
       if (idx > -1) list.splice(idx, 1);
+      if (pellet.name == "POWERPELLET") this.ghost.startFreight();
     }
   }
 
