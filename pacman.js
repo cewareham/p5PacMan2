@@ -62,7 +62,7 @@ class Pacman extends Entity {
   }
 
   reverseDirection() {
-    this.dirString = this.oppDirection(this.dirString);
+    this.dirString = oppDirection(this.dirString);
     let temp = this.node;
     this.node = this.targetNode;
     this.targetNode = temp;

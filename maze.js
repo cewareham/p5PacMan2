@@ -8,6 +8,7 @@ let mazetest = [
     "X+....+X",
     "XXXXXXXX"
   ];
+  
   let maze1 = [
     "XXXXXXXXXXXXXXXXXXXXXXXXXXXX",
     "XXXXXXXXXXXXXXXXXXXXXXXXXXXX",

@@ -3,6 +3,9 @@ class Game {
     this.lastdT = 0;
     this.nodes = new NodeGroup(maze1);
     this.nodes.setPortalPair({x:0, y:17}, {x:27, y:17});
+    let homekey = this.nodes.createHomeNodes(11.5, 14);
+    this.nodes.connectHomeNodes(homekey, "12-14", "LEFT");
+    this.nodes.connectHomeNodes(homekey, "15-14", "RIGHT");
     this.pacman = new Pacman(this.nodes.getStartTempNode());
     this.pellets = new PelletGroup(maze1);
     this.ghost = new Ghost(this.nodes.getStartTempNode(), this.pacman);

@@ -84,18 +84,8 @@ class Entity {
         return false;
     }
 
-    // get key value from cc.DIR that is
-    // opposite direction of direction parameter
-    oppDirection(dirString) {
-        let dir = cc.DIR[dirString];
-        let oppdir = dir * -1;
-        // getKeyValue(..) is in sketch.js
-        let oppKey = getKeyValue(cc.DIR, oppdir);
-        return oppKey;
-    }
-
     reverseDirection() {
-        this.dirString = oppDirection(this.dirString);  // oppDirection() in this.file
+        this.dirString = oppDirection(this.dirString);  // oppDirection() in sketch.js
         let temp = this.node;
         this.node = this.targetNode;
         this.targetNode = temp;
@@ -120,7 +110,7 @@ class Entity {
             }
         }
         if (directions.length == 0) {
-            directions.push(oppDirection(this.dirString));  // oppDirection in this.file
+            directions.push(oppDirection(this.dirString));  // oppDirection in sketch.js
         }
         return directions;
     }

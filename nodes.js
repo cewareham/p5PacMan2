@@ -32,13 +32,45 @@ class NodeGroup {
     this.createNodeTable(this.maze);
     this.connectHorizontally(this.maze);
     this.connectVertically(this.maze);
+    this.homekey = null;
+  }
+
+  createHomeNodes(xoffset, yoffset) {
+    let homedata = [
+      "XX+XX",
+      "XX.XX",
+      "+X.X+",
+      "+.+.+",
+      "+XXX+",
+    ];
+    this.createNodeTable(homedata, xoffset, yoffset);
+    this.connectHorizontally(homedata, xoffset, yoffset);
+    this.connectVertically(homedata, xoffset, yoffset);
+    this.homekey = this.constructKey(xoffset+2, yoffset);
+    return this.homekey;
+  }
+
+  // returns dash-separated x,y coord key string
+  // used in nodesLUT (object with key-value pairs)
+  // eg. key might be "22-56" which is x,y dash separated coords of node
+  constructKey(x, y) {
+    //return {x:x*cc.TILEWIDTH, y:y*cc.TILEHEIGHT};
+    let coordx = x*cc.TILEWIDTH;
+    let coordy = y*cc.TILEHEIGHT;
+    return coordx+"-"+coordy;
+  }
+
+  connectHomeNodes(homekey, otherkey, dirString) {
+    let coord = this.keyToCoords(otherkey);
+    let key = this.constructKey(coord.x, coord.y);
+    this.nodesLUT[homekey].neighborNodes[dirString] = this.nodesLUT[key];
+    let oppString = oppDirection(dirString);  // oppDirection(..) in sketch.js
+    this.nodesLUT[key].neighborNodes[oppString] = this.nodesLUT[homekey];
   }
 
   setPortalPair(pair1, pair2) {
-    let coord1 = this.constructKey(pair1.x, pair1.y);
-    let key1 = coord1.x+"-"+coord1.y;
-    let coord2 = this.constructKey(pair2.x, pair2.y);
-    let key2 = coord2.x+"-"+coord2.y;
+    let key1 = this.constructKey(pair1.x, pair1.y);
+    let key2 = this.constructKey(pair2.x, pair2.y);
     let keys = Object.keys(this.nodesLUT);
     if ((keys.indexOf(key1) != -1) && (keys.indexOf(key2) != -1)) {
       this.nodesLUT[key1].neighborNodes["PORTAL"] = this.nodesLUT[key2];
@@ -52,11 +84,18 @@ class NodeGroup {
       for (col=0; col<data[row].length; col++) {
         // is char from maze in this.nodeSymbols array?
         if (this.nodeSymbols.indexOf(data[row][col]) != -1) {
-          let coord = this.constructKey(col+xoffset, row+yoffset);
-          this.nodesLUT[coord.x+"-"+coord.y] = new Node(coord.x, coord.y);
+          let key = this.constructKey(col+xoffset, row+yoffset);
+          let coords = this.keyToCoords(key);
+          this.nodesLUT[key] = new Node(coords.x, coords.y);
         }
       }
     }
+  }
+
+  // given key like "36-120" return object {x:36, y:120}
+  keyToCoords(key) {
+    let coords = key.split("-");
+    return {x:parseInt(coords[0]), y:parseInt(coords[1])};
   }
 
   connectHorizontally(data, xoffset=0, yoffset=0) {
@@ -67,11 +106,9 @@ class NodeGroup {
         // is char from maze in this.nodeSymbols array?
         if (this.nodeSymbols.indexOf(data[row][col]) != -1) {
           if (key == null) {
-            coord = this.constructKey(col+xoffset, row+yoffset);
-            key = coord.x+"-"+coord.y;
+            key = this.constructKey(col+xoffset, row+yoffset);
           } else {
-            coord = this.constructKey(col+xoffset, row+yoffset);
-            otherkey = coord.x+"-"+coord.y;
+            otherkey = this.constructKey(col+xoffset, row+yoffset);
             this.nodesLUT[key].neighborNodes["RIGHT"] = this.nodesLUT[otherkey];
             this.nodesLUT[otherkey].neighborNodes["LEFT"] = this.nodesLUT[key];
             key = otherkey;
@@ -91,11 +128,9 @@ class NodeGroup {
       for (row=0; row<dataT[col].length; row++) {
         if (this.nodeSymbols.indexOf(dataT[col][row]) != -1) {
           if (key == null) {
-            coord = this.constructKey(col+xoffset, row+yoffset);
-            key = coord.x+"-"+coord.y;
+            key = this.constructKey(col+xoffset, row+yoffset);
           } else {
-            coord = this.constructKey(col+xoffset, row+yoffset);
-            otherkey = coord.x+"-"+coord.y;
+            otherkey = this.constructKey(col+xoffset, row+yoffset);
             this.nodesLUT[key].neighborNodes["DOWN"] = this.nodesLUT[otherkey]
             this.nodesLUT[otherkey].neighborNodes["UP"] = this.nodesLUT[key]
             key = otherkey
@@ -120,10 +155,6 @@ class NodeGroup {
       }
     }
     return grid;
-  }
-
-  constructKey(x, y) {
-    return {x:x*cc.TILEWIDTH, y:y*cc.TILEHEIGHT};
   }
 
   // return 1st node in this.nodesLUT object
