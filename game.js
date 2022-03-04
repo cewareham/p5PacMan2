@@ -9,6 +9,7 @@ class Game {
     this.pacman = new Pacman(this.nodes.getStartTempNode());
     this.pellets = new PelletGroup(maze1);
     this.ghost = new Ghost(this.nodes.getStartTempNode(), this.pacman);
+    this.ghost.setSpawnNode(this.nodes.getNodeFromTiles(2+11.5, 3+14));
   }
 
   checkPelletEvents() {
@@ -32,6 +33,13 @@ class Game {
     this.ghost.update(dt);
     this.pellets.update(dt);
     this.checkPelletEvents();
+    this.checkGhostEvents();
+  }
+
+  checkGhostEvents() {
+    if (this.pacman.collideGhost(this.ghost)) {
+      if (this.ghost.mode.current == cc.FREIGHT) this.ghost.startSpawn();
+    }
   }
   
   render = () => {

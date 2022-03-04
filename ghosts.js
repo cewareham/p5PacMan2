@@ -36,4 +36,21 @@ class Ghost extends Entity {
         this.setSpeed(100);
         this.directionMethod = this.goalDirection;
     }
+
+    spawn() {
+        this.goalVector = this.spawnNode.position;
+    }
+
+    setSpawnNode(node) {
+        this.spawnNode = node;
+    }
+
+    startSpawn() {
+        this.mode.setSpawnMode();
+        if (this.mode.current == cc.SPAWN) {
+            this.setSpeed(150);
+            this.directionMethod = this.goalDirection;
+            this.spawn();
+        }
+    }
 }

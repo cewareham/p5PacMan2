@@ -35,6 +35,7 @@ class ModeController {
     }
 
     update = (dt) => {
+        let ary = [cc.SCATTER, cc.CHASE];
         this.mainmode.update(dt);
         if (this.current == cc.FREIGHT) {
             this.timer += dt;
@@ -43,9 +44,19 @@ class ModeController {
                 this.entity.normalMode();
                 this.current = this.mainmode.mode;
             }
-        } else {
+        } else if (ary.includes(this.current)) {
             this.current = this.mainmode.mode;
         }
+        if (this.current == cc.SPAWN) {
+            if (this.entity.node == this.entity.spawnNode) {
+                this.entity.normalMode();
+                this.current = this.mainmode.mode;
+            }
+        }
+    }
+
+    setSpawnMode() {
+        if (this.current == cc.FREIGHT) this.current = cc.SPAWN;
     }
 
     setFreightMode() {

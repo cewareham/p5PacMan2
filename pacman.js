@@ -21,12 +21,23 @@ class Pacman extends Entity {
 
   eatPellets(pelletList) {
     for (let pellet of pelletList) {
-      let d = this.positionVector.sub(pellet.position);
-      let dSquared = d.magnitudeSquared();
-      let rSquared = Math.pow(pellet.radius+this.collideRadius, 2);
-      if (dSquared <= rSquared) return pellet;
+      if (this.collideCheck(pellet)) {
+        return pellet;
+      }
     }
     return null;
+  }
+
+  collideGhost(ghost) {
+    return this.collideCheck(ghost);
+  }
+
+  collideCheck(other) {
+    let d = this.positionVector.sub(other.position);
+    let dSquared = d.magnitudeSquared();
+    let rSquared = Math.pow(this.collideRadius + other.collideRadius, 2);
+    if (dSquared <= rSquared) return true;
+    return false;
   }
 
   setPosition() {

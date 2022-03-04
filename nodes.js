@@ -168,4 +168,10 @@ class NodeGroup {
     let nodes = Object.values(this.nodesLUT);
     nodes.forEach(node => node.render());
   }
+
+  getNodeFromTiles(col, row) {
+    let xyKey = this.constructKey(col, row);
+    if (xyKey in this.nodesLUT) return this.nodesLUT[xyKey];
+    return null;
+  }
 }
