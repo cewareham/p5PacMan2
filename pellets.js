@@ -48,7 +48,7 @@ class PelletGroup {
         this.pelletList = [];
         this.powerpellets = [];
         this.createPelletList(this.maze);
-        this.numeaten = 0;
+        this.numEaten = 0;
     }
 
     update = (dt) => {

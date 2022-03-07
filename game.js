@@ -1,12 +1,12 @@
 class Game {
   constructor() {
     this.lastdT = 0;
+    // BEGIN GameController class startGame() code (in python version)
     this.nodes = new NodeGroup(maze1);
     this.nodes.setPortalPair({x:0, y:17}, {x:27, y:17});
     let homekey = this.nodes.createHomeNodes(11.5, 14);
     this.nodes.connectHomeNodes(homekey, "12-14", "LEFT");
     this.nodes.connectHomeNodes(homekey, "15-14", "RIGHT");
-    //this.pacman = new Pacman(this.nodes.getStartTempNode());
     this.pacman = new Pacman(this.nodes.getNodeFromTiles(15, 26));
     this.pellets = new PelletGroup(maze1);
     this.ghosts = new GhostGroup(this.nodes.getStartTempNode(), this.pacman);
@@ -15,12 +15,15 @@ class Game {
     this.ghosts.inky.setStartNode(this.nodes.getNodeFromTiles(0+11.5, 3+14))
     this.ghosts.clyde.setStartNode(this.nodes.getNodeFromTiles(4+11.5, 3+14))
     this.ghosts.setSpawnNode(this.nodes.getNodeFromTiles(2+11.5, 3+14));
+    // END GameController class startGame() code (in python version)
+    this.fruit = null;
   }
 
   checkPelletEvents() {
     let list = this.pellets.pelletList;
     let pellet = this.pacman.eatPellets(list);
     if (pellet) {
+      this.pellets.numEaten += 1;
       const idx = list.indexOf(pellet);
       if (idx > -1) list.splice(idx, 1);
       if (pellet.name == "POWERPELLET") this.ghosts.startFreight();
@@ -36,8 +39,25 @@ class Game {
     this.pacman.update(dt);
     this.ghosts.update(dt);
     this.pellets.update(dt);
+    if (this.fruit != null) this.fruit.update(dt);
     this.checkPelletEvents();
     this.checkGhostEvents();
+    this.checkFruitEvents();
+  }
+
+  checkFruitEvents() {
+    if (this.pellets.numEaten == 50 || this.pellets.numEaten == 140) {
+      if (this.fruit == null) {
+        this.fruit = new Fruit(this.nodes.getNodeFromTiles(9, 20));
+      }
+    }
+    if (this.fruit != null) {
+      if (this.pacman.collideCheck(this.fruit)) {
+        this.fruit = null;
+      } else if (this.fruit.destroy) {
+        this.fruit = null;
+      }
+    }
   }
 
   checkGhostEvents() {
@@ -55,6 +75,7 @@ class Game {
     background(cc.BLACK);
     this.nodes.render();
     this.pellets.render();
+    if (this.fruit !=  null) this.fruit.render();
     this.pacman.render();
     this.ghosts.render();
   }

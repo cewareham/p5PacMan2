@@ -15,6 +15,14 @@ class Entity {
         this.setStartNode(node);
     }
 
+    setBetweenNodes(dirString) {
+        if (this.node.neighborNodes[dirString] != null) {
+            this.targetNode = this.node.neighborNodes[dirString];
+            this.position = this.node.position.add(this.targetNode.position);
+            this.position = this.position.div(2.0);
+        }
+    }
+
     setStartNode(node) {
         this.node = node;
         this.startNode = node;

@@ -23,6 +23,7 @@ let cc = {
   PINK         : 'rgb(255,100,150)',
   TEAL         : 'rgb(100,255,255)',
   ORANGE       : 'rgb(230,190,40)',
+  GREEN        : 'rgb(0, 255, 0)',
 
   STOP         : 0,
   UP           : 1,
@@ -46,6 +47,7 @@ let cc = {
   PINKY        : 5,
   INKY         : 6,
   CLYDE        : 7,
+  FRUIT        : 8,
   }
 cc.SCREENWIDTH = cc.NCOLS*cc.TILEWIDTH;    // 448
 cc.SCREENHEIGHT = cc.NROWS*cc.TILEHEIGHT;  // 576
