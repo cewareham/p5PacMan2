@@ -30,3 +30,21 @@ function getKeyValue(obj, value) {
   }
   return null;
 }
+
+
+// 4 ways to access an array
+function testArray() {
+  let tst = [4, 5, 6];
+  for (let idx in tst) { // outputs array index -> 0, 1, 2
+    console.log(idx);
+  }
+  for (let item of tst) { // outputs array item -> 4, 5, 6
+    console.log(item);
+  }
+  tst.forEach((item) => { // outputs array item -> 4, 5, 6
+    console.log(item);
+  });
+  for (let ii=0; ii<tst.length; ii++) {
+    console.log(ii, tst[ii]); // outputs array index & item
+  }
+}

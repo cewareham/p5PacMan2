@@ -19,7 +19,10 @@ let cc = {
   BLACK        : 'black',
   YELLOW       : 'yellow',
   WHITE        : 'white',
-  RED          : 'red',
+  RED          : 'rgb(255,0,0)',
+  PINK         : 'rgb(255,100,150)',
+  TEAL         : 'rgb(100,255,255)',
+  ORANGE       : 'rgb(230,190,40)',
 
   STOP         : 0,
   UP           : 1,
@@ -38,8 +41,12 @@ let cc = {
   SCATTER      : 0,
   CHASE        : 1,
   FREIGHT      : 2,
-  SPAWN        : 3
-}
+  SPAWN        : 3,
+  BLINKY       : 4,
+  PINKY        : 5,
+  INKY         : 6,
+  CLYDE        : 7,
+  }
 cc.SCREENWIDTH = cc.NCOLS*cc.TILEWIDTH;    // 448
 cc.SCREENHEIGHT = cc.NROWS*cc.TILEHEIGHT;  // 576
 cc.SCREENSIZE = (cc.SCREENWIDTH, cc.SCREENHEIGHT);

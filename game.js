@@ -8,18 +8,18 @@ class Game {
     this.nodes.connectHomeNodes(homekey, "15-14", "RIGHT");
     this.pacman = new Pacman(this.nodes.getStartTempNode());
     this.pellets = new PelletGroup(maze1);
-    this.ghost = new Ghost(this.nodes.getStartTempNode(), this.pacman);
-    this.ghost.setSpawnNode(this.nodes.getNodeFromTiles(2+11.5, 3+14));
+    this.ghosts = new GhostGroup(this.nodes.getStartTempNode(), this.pacman);
+    let spawnkey = this.nodes.constructKey(2+11.5, 3+14);
+    this.ghosts.setSpawnNode(this.nodes.nodesLUT[spawnkey]);
   }
 
   checkPelletEvents() {
     let list = this.pellets.pelletList;
     let pellet = this.pacman.eatPellets(list);
     if (pellet) {
-      this.pellets.numEaten += 1;
       const idx = list.indexOf(pellet);
       if (idx > -1) list.splice(idx, 1);
-      if (pellet.name == "POWERPELLET") this.ghost.startFreight();
+      if (pellet.name == "POWERPELLET") this.ghosts.startFreight();
     }
   }
 
@@ -30,15 +30,20 @@ class Game {
     this.lastdT = wpn;
     dt /= 1000.00;                // secs since last time this line called
     this.pacman.update(dt);
-    this.ghost.update(dt);
+    this.ghosts.update(dt);
     this.pellets.update(dt);
     this.checkPelletEvents();
     this.checkGhostEvents();
   }
 
   checkGhostEvents() {
-    if (this.pacman.collideGhost(this.ghost)) {
-      if (this.ghost.mode.current == cc.FREIGHT) this.ghost.startSpawn();
+    let theGhosts = this.ghosts.ghosts;   // returns array of the 4 ghosts
+    for (let ghost of theGhosts) {
+      if (this.pacman.collideGhost(ghost)) {
+        if (ghost.mode.current == cc.FREIGHT) {
+          ghost.startSpawn();
+        }
+      }
     }
   }
   
@@ -47,6 +52,6 @@ class Game {
     this.nodes.render();
     this.pellets.render();
     this.pacman.render();
-    this.ghost.render();
+    this.ghosts.render();
   }
 }
