@@ -6,11 +6,15 @@ class Game {
     let homekey = this.nodes.createHomeNodes(11.5, 14);
     this.nodes.connectHomeNodes(homekey, "12-14", "LEFT");
     this.nodes.connectHomeNodes(homekey, "15-14", "RIGHT");
-    this.pacman = new Pacman(this.nodes.getStartTempNode());
+    //this.pacman = new Pacman(this.nodes.getStartTempNode());
+    this.pacman = new Pacman(this.nodes.getNodeFromTiles(15, 26));
     this.pellets = new PelletGroup(maze1);
     this.ghosts = new GhostGroup(this.nodes.getStartTempNode(), this.pacman);
-    let spawnkey = this.nodes.constructKey(2+11.5, 3+14);
-    this.ghosts.setSpawnNode(this.nodes.nodesLUT[spawnkey]);
+    this.ghosts.blinky.setStartNode(this.nodes.getNodeFromTiles(2+11.5, 0+14));
+    this.ghosts.pinky.setStartNode(this.nodes.getNodeFromTiles(2+11.5, 3+14))
+    this.ghosts.inky.setStartNode(this.nodes.getNodeFromTiles(0+11.5, 3+14))
+    this.ghosts.clyde.setStartNode(this.nodes.getNodeFromTiles(4+11.5, 3+14))
+    this.ghosts.setSpawnNode(this.nodes.getNodeFromTiles(2+11.5, 3+14));
   }
 
   checkPelletEvents() {

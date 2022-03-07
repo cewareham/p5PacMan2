@@ -8,13 +8,18 @@ class Entity {
         this.collideRadius = 5;
         this.diam = this.radius*2;
         this.color = cc.WHITE;
-        this.node = node;
-        this.setPosition();
-        this.targetNode = node;
         this.visible = true;
         this.disablePortal = false;
         this.goalVector = null;
         this.directionMethod = this.randomDirection;
+        this.setStartNode(node);
+    }
+
+    setStartNode(node) {
+        this.node = node;
+        this.startNode = node;
+        this.targetNode = node;
+        this.setPosition();
     }
 
     goalDirection(dirVectors) {

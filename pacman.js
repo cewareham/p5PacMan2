@@ -15,6 +15,7 @@ class Pacman extends Entity {
     this.setPosition();
     // previously this.target
     this.targetNode = node;
+    this.dirString = "LEFT";
 
     //this.dirVector = this.dirVectors[this.dirString]; // or getDirectionVector(this.dirString)
   }
