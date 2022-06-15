@@ -17,7 +17,7 @@ class Pacman extends Entity {
     this.targetNode = node;
     this.dirString = "LEFT";
     this.setBetweenNodes("LEFT");
-
+    // this.visible is in Entity class
     //this.dirVector = this.dirVectors[this.dirString]; // or getDirectionVector(this.dirString)
   }
 
@@ -119,9 +119,11 @@ class Pacman extends Entity {
   }
 
   render = () => {
-    let p = this.positionVector.asInt();  // returns object
-    fill(this.color);
-    circle(p.x, p.y, this.diam);
+    if (this.visible) {
+      let p = this.positionVector.asInt();  // returns object
+      fill(this.color);
+      circle(p.x, p.y, this.diam);
+    }
   }
   
   getValidKey = () => {

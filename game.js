@@ -17,6 +17,7 @@ class Game {
     this.ghosts.setSpawnNode(this.nodes.getNodeFromTiles(2+11.5, 3+14));
     // END GameController class startGame() code (in python version)
     this.fruit = null;
+    this.pause = new Pause(true);
   }
 
   checkPelletEvents() {
@@ -36,13 +37,17 @@ class Game {
     let dt = wpn - this.lastdT;   // milisecs since last time this line called
     this.lastdT = wpn;
     dt /= 1000.00;                // secs since last time this line called
-    this.pacman.update(dt);
-    this.ghosts.update(dt);
-    this.pellets.update(dt);
-    if (this.fruit != null) this.fruit.update(dt);
-    this.checkPelletEvents();
-    this.checkGhostEvents();
-    this.checkFruitEvents();
+     this.pellets.update(dt);
+    if (!this.pause.paused) {
+      this.pacman.update(dt);
+      this.ghosts.update(dt);
+      if (this.fruit != null) this.fruit.update(dt);
+      this.checkPelletEvents();
+      this.checkGhostEvents();
+      this.checkFruitEvents();
+    }
+    const afterPauseMethod = this.pause.update(dt);
+    if (afterPauseMethod != null) afterPauseMethod(dt);
   }
 
   checkFruitEvents() {
@@ -60,11 +65,33 @@ class Game {
     }
   }
 
+  keyPressed() {
+    if (keyCode == cc.keySpace) {
+      console.log("space pressed");
+      this.pause.setPause(true);
+      if (!this.pause.paused) this.showEntities();
+      else this.hideEntities();
+    }
+  }
+
+  showEntities() {
+    game.pacman.visible = true;
+    game.ghosts.show();
+  }
+
+  hideEntities() {
+    this.pacman.visible = false;
+    this.ghosts.hide();
+  }
+
   checkGhostEvents() {
     let theGhosts = this.ghosts.ghosts;   // returns array of the 4 ghosts
     for (let ghost of theGhosts) {
       if (this.pacman.collideGhost(ghost)) {
         if (ghost.mode.current == cc.FREIGHT) {
+          this.pacman.visible = false;
+          ghost.visible = false;
+          this.pause.setPause(false, 1, this.showEntities);
           ghost.startSpawn();
         }
       }

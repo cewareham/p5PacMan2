@@ -10,6 +10,10 @@ function draw() {
   game.render();
 }
 
+function keyPressed() {
+  game.keyPressed();
+}
+
 //*** keep oppDirection(..) here - used several places
 // get key value from cc.DIR that is
   // opposite direction of dirString
@@ -30,7 +34,6 @@ function getKeyValue(obj, value) {
   }
   return null;
 }
-
 
 // 4 ways to access an array
 function testArray() {
