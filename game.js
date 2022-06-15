@@ -5,6 +5,22 @@ class Game {
     this.fruit = null;
     this.pause = new Pause(true);
     this.level = 0;
+    this.lives = 5;
+  }
+
+  restartGame() {
+    game.lives = 5;
+    game.level = 0;
+    game.pause.paused = true;
+    game.fruit = null;
+    game.startGame();
+  }
+
+  resetLevel() {
+    game.pause.paused = true;
+    game.pacman.reset();
+    game.ghosts.reset();
+    game.fruit = null;
   }
 
   startGame() {
@@ -83,9 +99,12 @@ class Game {
 
   keyPressed() {
     if (keyCode == cc.keySpace) {
-      this.pause.setPause(true);
-      if (!this.pause.paused) this.showEntities();
-      else this.hideEntities();
+      console.log(this.lives);
+      if (this.pacman.alive) {
+        this.pause.setPause(true);
+        if (!this.pause.paused) this.showEntities();
+        else this.hideEntities();
+      }
     }
   }
 
@@ -108,6 +127,14 @@ class Game {
           ghost.visible = false;
           this.pause.setPause(false, 1, this.showEntities);
           ghost.startSpawn();
+        } else if (ghost.mode.current != cc.SPAWN) {
+          if (this.pacman.alive) {
+            this.lives--;
+            this.pacman.die();
+            this.ghosts.hide();
+            if (this.lives <= 0) this.pause.setPause(false, 3, this.restartGame);
+            else this.pause.setPause(false, 3, this.resetLevel);
+          }
         }
       }
     }

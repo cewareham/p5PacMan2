@@ -11,6 +11,12 @@ class Ghost extends Entity {
         this.homeNode = node;
     }
 
+    reset() {
+        super.reset();
+        this.points = 200;
+        this.directionMethod = this.goalDirection;
+    }
+
     update = (dt) => {
         this.mode.update(dt);
         if (this.mode.current == cc.SCATTER) this.scatter();

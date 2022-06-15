@@ -18,7 +18,20 @@ class Pacman extends Entity {
     this.dirString = "LEFT";
     this.setBetweenNodes("LEFT");
     // this.visible is in Entity class
+    this.alive = true;
     //this.dirVector = this.dirVectors[this.dirString]; // or getDirectionVector(this.dirString)
+  }
+
+  reset() {
+    super.reset();
+    this.dirString = "LEFT";
+    this.setBetweenNodes("LEFT");
+    this.alive = true;
+  }
+
+  die() {
+    this.alive = false;
+    this.dirString = "STOP";
   }
 
   eatPellets(pelletList) {

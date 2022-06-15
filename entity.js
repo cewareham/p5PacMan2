@@ -15,6 +15,13 @@ class Entity {
         this.setStartNode(node);
     }
 
+    reset() {
+        this.setStartNode(this.startNode);
+        this.dirString = "STOP";
+        this.speed = 100;
+        this.visible = true;
+    }
+
     setBetweenNodes(dirString) {
         if (this.node.neighborNodes[dirString] != null) {
             this.targetNode = this.node.neighborNodes[dirString];
