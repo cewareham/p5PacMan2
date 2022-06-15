@@ -1,6 +1,13 @@
 class Game {
   constructor() {
     this.lastdT = 0;
+    this.startGame();
+    this.fruit = null;
+    this.pause = new Pause(true);
+    this.level = 0;
+  }
+
+  startGame() {
     // BEGIN GameController class startGame() code (in python version)
     this.nodes = new NodeGroup(maze1);
     this.nodes.setPortalPair({x:0, y:17}, {x:27, y:17});
@@ -16,18 +23,27 @@ class Game {
     this.ghosts.clyde.setStartNode(this.nodes.getNodeFromTiles(4+11.5, 3+14))
     this.ghosts.setSpawnNode(this.nodes.getNodeFromTiles(2+11.5, 3+14));
     // END GameController class startGame() code (in python version)
-    this.fruit = null;
-    this.pause = new Pause(true);
+  }
+
+  nextLevel() {
+    game.showEntities();
+    game.level++;
+    game.pause.paused = true;
+    game.startGame();
   }
 
   checkPelletEvents() {
     let list = this.pellets.pelletList;
     let pellet = this.pacman.eatPellets(list);
     if (pellet) {
-      this.pellets.numEaten += 1;
+      this.pellets.numEaten++;
       const idx = list.indexOf(pellet);
       if (idx > -1) list.splice(idx, 1);
       if (pellet.name == "POWERPELLET") this.ghosts.startFreight();
+      if (this.pellets.isEmpty()) {
+        this.hideEntities();
+        this.pause.setPause(false, 3, this.nextLevel);
+      }
     }
   }
 
@@ -67,7 +83,6 @@ class Game {
 
   keyPressed() {
     if (keyCode == cc.keySpace) {
-      console.log("space pressed");
       this.pause.setPause(true);
       if (!this.pause.paused) this.showEntities();
       else this.hideEntities();

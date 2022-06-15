@@ -81,8 +81,11 @@ class PelletGroup {
         }
     }
 
+    pelletsLeft() {
+        return this.pelletList.length;
+    }
+
     isEmpty() {
-        if (this.pelletList.length == 0) return true;
-        return false;
+        return (this.pelletList.length == 0);
     }
 }
