@@ -43,6 +43,7 @@ class Ghost extends Entity {
     normalMode() {
         this.setSpeed(100);
         this.directionMethod = this.goalDirection;
+        this.homeNode.denyAccess("DOWN", this);
     }
 
     spawn() {

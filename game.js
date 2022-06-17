@@ -39,6 +39,16 @@ class Game {
     this.ghosts.clyde.setStartNode(this.nodes.getNodeFromTiles(4+11.5, 3+14))
     this.ghosts.setSpawnNode(this.nodes.getNodeFromTiles(2+11.5, 3+14));
     // END GameController class startGame() code (in python version)
+    this.nodes.denyHomeAccess(this.pacman);
+    this.nodes.denyHomeAccessList(this.ghosts.ghosts);
+    this.nodes.denyAccessList(2+11.5, 3+14, "LEFT", this.ghosts.ghosts);
+    this.nodes.denyAccessList(2+11.5, 3+14, "RIGHT", this.ghosts.ghosts);
+    this.ghosts.inky.startNode.denyAccess("RIGHT", this.ghosts.inky);
+    this.ghosts.clyde.startNode.denyAccess("LEFT", this.ghosts.clyde);
+    this.nodes.denyAccessList(12, 14, "UP", this.ghosts.ghosts);
+    this.nodes.denyAccessList(15, 14, "UP", this.ghosts.ghosts);
+    this.nodes.denyAccessList(12, 26, "UP", this.ghosts.ghosts);
+    this.nodes.denyAccessList(15, 26, "UP", this.ghosts.ghosts);
   }
 
   nextLevel() {
@@ -53,6 +63,10 @@ class Game {
     let pellet = this.pacman.eatPellets(list);
     if (pellet) {
       this.pellets.numEaten++;
+      if (this.pellets.numEaten == 30)
+        this.ghosts.inky.startNode.allowAccess("RIGHT", this.ghosts.inky);
+      if (this.pellets.numEaten == 70)
+        this.ghosts.clyde.startNode.allowAccess("LEFT", this.ghosts.clyde);
       const idx = list.indexOf(pellet);
       if (idx > -1) list.splice(idx, 1);
       if (pellet.name == "POWERPELLET") this.ghosts.startFreight();
@@ -127,6 +141,7 @@ class Game {
           ghost.visible = false;
           this.pause.setPause(false, 1, this.showEntities);
           ghost.startSpawn();
+          this.nodes.allowHomeAccess(ghost);
         } else if (ghost.mode.current != cc.SPAWN) {
           if (this.pacman.alive) {
             this.lives--;

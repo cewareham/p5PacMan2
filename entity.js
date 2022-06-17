@@ -26,7 +26,7 @@ class Entity {
         if (this.node.neighborNodes[dirString] != null) {
             this.targetNode = this.node.neighborNodes[dirString];
             this.position = this.node.position.add(this.targetNode.position);
-            this.position = this.position.div(2.0);
+            //this.position = this.position.div(2.0);
         }
     }
 
@@ -87,10 +87,10 @@ class Entity {
     }
 
     getNewTarget(dirString) {
-    if (this.validDirection(dirString)) {
-        return this.node.neighborNodes[dirString];
-    }
-    return this.node
+        if (this.validDirection(dirString)) {
+            return this.node.neighborNodes[dirString];
+        }
+        return this.node
     }
   
     overshotTarget() {
@@ -113,7 +113,9 @@ class Entity {
   
     validDirection(dirString) {
         if (dirString != "STOP") {
-            if (this.node.neighborNodes[dirString] != null) return true;
+            if (this.node.access[dirString].includes(this.name)) {
+                if (this.node.neighborNodes[dirString] != null) return true;
+            }
         }
         return false;
     }
@@ -142,7 +144,7 @@ class Entity {
     }
 
     oppositeDirection(dirString) {
-        if (direction != "STOP") {
+        if (dirString != "STOP") {
             let dir = cc.DIR[dirString];
             let thisdir = cc.DIR[this.dirString];
             if (dir == thisdir * -1) {

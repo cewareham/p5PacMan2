@@ -87,24 +87,24 @@ class Pacman extends Entity {
     }
   }
 
-  reverseDirection() {
-    this.dirString = oppDirection(this.dirString);
-    let temp = this.node;
-    this.node = this.targetNode;
-    this.targetNode = temp;
-  }
+  // reverseDirection() {
+  //   this.dirString = oppDirection(this.dirString);
+  //   let temp = this.node;
+  //   this.node = this.targetNode;
+  //   this.targetNode = temp;
+  // }
 
   // is pacman's direction opposite of a specified direction?
-  oppositeDirection(dirString) {
-    if (dirString != "STOP") {
-      let dir = cc.DIR[dirString];
-      let thisdir = cc.DIR[this.dirString];
-      if (dir == thisdir * -1) {
-        return true;
-      }
-    }
-    return false;
-  }
+  // oppositeDirection(dirString) {
+  //   if (dirString != "STOP") {
+  //     let dir = cc.DIR[dirString];
+  //     let thisdir = cc.DIR[this.dirString];
+  //     if (dir == thisdir * -1) {
+  //       return true;
+  //     }
+  //   }
+  //   return false;
+  // }
   
   overshotTarget() {
     if (this.targetNode != null) {
@@ -117,19 +117,21 @@ class Pacman extends Entity {
     return false;
   }
 
-  validDirection(dirString) {
-    if (dirString != "STOP") {
-      if (this.node.neighborNodes[dirString] != null) {
-        return true;
-      }
-    }
-    return false;
-  }
+  // use validDirection(..) in entity.js instead of this one
+  // since entity.js function uses the access array & this one does not
+  // validDirection(dirString) {
+  //   if (dirString != "STOP") {
+  //     if (this.node.neighborNodes[dirString] != null) {
+  //       return true;
+  //     }
+  //   }
+  //   return false;
+  // }
 
-  getNewTarget(dirString) {
-    if (this.validDirection(dirString)) return this.node.neighborNodes[dirString];
-    return this.node;
-  }
+  // getNewTarget(dirString) {
+  //   if (this.validDirection(dirString)) return this.node.neighborNodes[dirString];
+  //   return this.node;
+  // }
 
   render = () => {
     if (this.visible) {

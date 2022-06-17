@@ -2,6 +2,30 @@ class Node {
   constructor(x, y) {
     this.position = new Vector2(x, y);
     this.neighborNodes = {UP:null, DOWN:null, LEFT:null, RIGHT:null, PORTAL:null};
+    this.access = {
+         UP: ["PACMAN", "BLINKY", "PINKY", "INKY", "CLYDE", "FRUIT"],
+       DOWN: ["PACMAN", "BLINKY", "PINKY", "INKY", "CLYDE", "FRUIT"],
+       LEFT: ["PACMAN", "BLINKY", "PINKY", "INKY", "CLYDE", "FRUIT"],
+      RIGHT: ["PACMAN", "BLINKY", "PINKY", "INKY", "CLYDE", "FRUIT"],
+    };
+  }
+
+  denyAccess(dirString, entity) {
+    if (entity.name == "PACMAN") {
+      entity.name = "PACMAN";
+      //console.log(dirString);
+    }
+    let array = this.access[dirString];
+    //console.log(array);
+    const index = array.indexOf(entity.name);
+    //console.log(index);
+    if (index > -1) array.splice(index, 1);
+    //console.log(array);
+  }
+
+  allowAccess(dirString, entity) {
+    let array = this.access[dirString];
+    if (!array.includes(entity.name)) array.push(entity.name);
   }
   
   render = () => {
@@ -33,6 +57,45 @@ class NodeGroup {
     this.connectHorizontally(this.maze);
     this.connectVertically(this.maze);
     this.homekey = null;
+  }
+
+  denyAccess(col, row, dirString, entity) {
+    const node = this.getNodeFromTiles(col, row);
+    if (node != null) node.denyAccess(dirString, entity);
+  }
+
+  allowAccess(col, row, dirString, entity) {
+    const node = this.getNodeFromTiles(col, row);
+    if (node != null) node.allowAccess(dirString, entity);
+  }
+
+  denyAccessList(col, row, dirString, entities) {
+    for (const entity of entities) this.denyAccess(col, row, dirString, entity);
+  }
+
+  allowAccessList(col, row, dirString, entities) {
+    for (const entity of entities) this.allowAccess(col, row, dirString, entity);
+  }
+
+  denyHomeAccess(entity) {
+    if (entity.name == "PACMAN") {
+      const bogus = 1;
+    }
+    console.log(entity, this.homekey, this.nodesLUT[this.homekey]);
+    this.nodesLUT[this.homekey].denyAccess("DOWN", entity);
+    console.log(entity, this.homekey, this.nodesLUT[this.homekey]);
+  }  
+
+  allowHomeAccess(entity) {
+    this.nodesLUT[this.homekey].allowAccess("DOWN", entity);
+  }  
+
+  denyHomeAccessList(entities) {
+    for (const entity of entities) this.denyHomeAccess(entity);
+  }
+
+  allowHomeAccessList(entities) {
+    for (const entity of entities) this.allowHomeAccess(entity);
   }
 
   createHomeNodes(xoffset, yoffset) {
