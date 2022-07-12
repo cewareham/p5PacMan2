@@ -78,12 +78,7 @@ class NodeGroup {
   }
 
   denyHomeAccess(entity) {
-    if (entity.name == "PACMAN") {
-      const bogus = 1;
-    }
-    console.log(entity, this.homekey, this.nodesLUT[this.homekey]);
     this.nodesLUT[this.homekey].denyAccess("DOWN", entity);
-    console.log(entity, this.homekey, this.nodesLUT[this.homekey]);
   }  
 
   allowHomeAccess(entity) {

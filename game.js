@@ -6,6 +6,43 @@ class Game {
     this.pause = new Pause(true);
     this.level = 0;
     this.lives = 5;
+    this.score = 0;
+    this.textgroup = new TextGroup();
+  }
+
+  update = () => {
+    // return amount of time passed since last time this line was called
+    let wpn = window.performance.now();
+    let dt = wpn - this.lastdT;   // milisecs since last time this line called
+    this.lastdT = wpn;
+    dt /= 1000.00;                // secs since last time this line called
+    this.textgroup.update(dt);
+    this.pellets.update(dt);
+    if (!this.pause.paused) {
+      this.pacman.update(dt);
+      this.ghosts.update(dt);
+      if (this.fruit != null) this.fruit.update(dt);
+      this.checkPelletEvents();
+      this.checkGhostEvents();
+      this.checkFruitEvents();
+    }
+    const afterPauseMethod = this.pause.update(dt);
+    if (afterPauseMethod != null) afterPauseMethod(dt);
+  }
+
+  updateScore(points) {
+    this.score += points;
+    this.textgroup.updateScore(this.score);
+  }
+  
+  render = () => {
+    background(cc.BLACK);
+    this.nodes.render();
+    this.pellets.render();
+    if (this.fruit !=  null) this.fruit.render();
+    this.pacman.render();
+    this.ghosts.render();
+    this.textgroup.render();
   }
 
   restartGame() {
@@ -14,6 +51,10 @@ class Game {
     game.pause.paused = true;
     game.fruit = null;
     game.startGame();
+    game.score = 0;
+    game.textgroup.updateScore(game.score);
+    game.textgroup.updateLevel(game.level);
+    game.textgroup.showText(cc.READYTXT);
   }
 
   resetLevel() {
@@ -21,6 +62,7 @@ class Game {
     game.pacman.reset();
     game.ghosts.reset();
     game.fruit = null;
+    game.textgroup.showText(cc.READYTXT);
   }
 
   startGame() {
@@ -56,6 +98,8 @@ class Game {
     game.level++;
     game.pause.paused = true;
     game.startGame();
+    game.textgroup.updateLevel(game.level);
+    game.textgroup.showText(cc.READYTXT);
   }
 
   checkPelletEvents() {
@@ -63,6 +107,7 @@ class Game {
     let pellet = this.pacman.eatPellets(list);
     if (pellet) {
       this.pellets.numEaten++;
+      this.updateScore(pellet.points);
       if (this.pellets.numEaten == 30)
         this.ghosts.inky.startNode.allowAccess("RIGHT", this.ghosts.inky);
       if (this.pellets.numEaten == 70)
@@ -77,25 +122,6 @@ class Game {
     }
   }
 
-  update = () => {
-    // return amount of time passed since last time this line was called
-    let wpn = window.performance.now();
-    let dt = wpn - this.lastdT;   // milisecs since last time this line called
-    this.lastdT = wpn;
-    dt /= 1000.00;                // secs since last time this line called
-     this.pellets.update(dt);
-    if (!this.pause.paused) {
-      this.pacman.update(dt);
-      this.ghosts.update(dt);
-      if (this.fruit != null) this.fruit.update(dt);
-      this.checkPelletEvents();
-      this.checkGhostEvents();
-      this.checkFruitEvents();
-    }
-    const afterPauseMethod = this.pause.update(dt);
-    if (afterPauseMethod != null) afterPauseMethod(dt);
-  }
-
   checkFruitEvents() {
     if (this.pellets.numEaten == 50 || this.pellets.numEaten == 140) {
       if (this.fruit == null) {
@@ -104,6 +130,8 @@ class Game {
     }
     if (this.fruit != null) {
       if (this.pacman.collideCheck(this.fruit)) {
+        this.updateScore(this.fruit.points);
+        this.textgroup.addText(this.fruit.points.toString(), cc.WHITE, this.fruit.position.x, this.fruit.position.y, 8, 1);
         this.fruit = null;
       } else if (this.fruit.destroy) {
         this.fruit = null;
@@ -113,11 +141,16 @@ class Game {
 
   keyPressed() {
     if (keyCode == cc.keySpace) {
-      console.log(this.lives);
       if (this.pacman.alive) {
         this.pause.setPause(true);
-        if (!this.pause.paused) this.showEntities();
-        else this.hideEntities();
+        if (!this.pause.paused) {
+          this.textgroup.hideText();
+          this.showEntities();
+        }
+        else {
+          this.textgroup.showText(cc.PAUSETXT);
+          this.hideEntities();
+        }
       }
     }
   }
@@ -139,6 +172,9 @@ class Game {
         if (ghost.mode.current == cc.FREIGHT) {
           this.pacman.visible = false;
           ghost.visible = false;
+          this.updateScore(ghost.points);
+          this.textgroup.addText(ghost.points.toString(), cc.WHITE, ghost.position.x, ghost.position.y, 8, 1);
+          this.ghosts.updatePoints();
           this.pause.setPause(false, 1, this.showEntities);
           ghost.startSpawn();
           this.nodes.allowHomeAccess(ghost);
@@ -147,20 +183,14 @@ class Game {
             this.lives--;
             this.pacman.die();
             this.ghosts.hide();
-            if (this.lives <= 0) this.pause.setPause(false, 3, this.restartGame);
+            if (this.lives <= 0) {
+              this.textgroup.showText(cc.GAMEOVERTXT);
+              this.pause.setPause(false, 3, this.restartGame);
+            }
             else this.pause.setPause(false, 3, this.resetLevel);
           }
         }
       }
     }
-  }
-  
-  render = () => {
-    background(cc.BLACK);
-    this.nodes.render();
-    this.pellets.render();
-    if (this.fruit !=  null) this.fruit.render();
-    this.pacman.render();
-    this.ghosts.render();
   }
 }

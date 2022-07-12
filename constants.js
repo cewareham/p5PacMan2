@@ -1,12 +1,13 @@
 let cc = {
-  sprites: {
+  //sprites: {
     // must have full path or p5.js editor won't work here!
-    "grass"   : { "path" : "assets/grass.png"},
-    "project" : { "path" : "assets/project.png"},
-    "title" : { "path" : "assets/title.png"},
-  },
-  sounds : {
-    "run_amok" : { "path" : "assets/run_amok.mp3"},
+    //  "grass"   : { "path" : "assets/grass.png"},
+  //},
+  //sounds : {
+  //  "run_amok" : { "path" : "assets/run_amok.mp3"},
+  //},
+  fonts  : {
+    "pressfont" : { "path" : "PressStart2P-Regular.ttf"},
   },
   
   TILEWIDTH    : 16,
@@ -49,7 +50,16 @@ let cc = {
   INKY         : 6,
   CLYDE        : 7,
   FRUIT        : 8,
-  }
-cc.SCREENWIDTH = cc.NCOLS*cc.TILEWIDTH;    // 448
-cc.SCREENHEIGHT = cc.NROWS*cc.TILEHEIGHT;  // 576
+
+  SCORETXT    : "0",
+  LEVELTXT    : "1",
+  READYTXT    : "2",
+  PAUSETXT    : "3",
+  GAMEOVERTXT : "4",
+
+  lives : 5,
+
+}
+cc.SCREENWIDTH = cc.NCOLS*cc.TILEWIDTH;    // 28*16 = 448
+cc.SCREENHEIGHT = cc.NROWS*cc.TILEHEIGHT;  // 36*16 = 576
 cc.SCREENSIZE = (cc.SCREENWIDTH, cc.SCREENHEIGHT);
