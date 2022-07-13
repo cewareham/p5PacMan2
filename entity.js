@@ -13,6 +13,11 @@ class Entity {
         this.goalVector = null;
         this.directionMethod = this.randomDirection;
         this.setStartNode(node);
+        this.image = null;
+    }
+
+    getEntity() {
+        return this;
     }
 
     reset() {
@@ -76,11 +81,15 @@ class Entity {
     
     render = () => {
         if (this.visible) {
-            let p = this.position.asInt();  // returns object
-            fill(this.color);
-            circle(p.x, p.y, this.diam);
+            const p = this.position.asInt();
+            if (this.image != null) {
+                image(this.image, p.x, p.y);
+            } else {
+               fill(this.color);
+                circle(p.x, p.y, this.diam);
+            }
         }
-      }
+    }
           
     setPosition() {
         this.position = this.node.position.cpy();

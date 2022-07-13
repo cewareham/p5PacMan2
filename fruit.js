@@ -3,11 +3,12 @@ class Fruit extends Entity {
         super(node);
         this.name = "FRUIT";
         this.color = cc.GREEN;
-        this.lifespan = 5;
+        this.lifespan = 10;
         this.timer = 0;
         this.destroy = false;
         this.points = 100;
         this.setBetweenNodes("RIGHT");
+        this.sprites = new FruitSprites(this);
     }
 
     update(dt) {

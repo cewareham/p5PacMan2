@@ -19,7 +19,7 @@ class Pacman extends Entity {
     this.setBetweenNodes("LEFT");
     // this.visible is in Entity class
     this.alive = true;
-    //this.dirVector = this.dirVectors[this.dirString]; // or getDirectionVector(this.dirString)
+    this.sprites = new PacmanSprites(this);
   }
 
   reset() {
@@ -86,25 +86,6 @@ class Pacman extends Entity {
       if (this.oppositeDirection(dirString)) this.reverseDirection();
     }
   }
-
-  // reverseDirection() {
-  //   this.dirString = oppDirection(this.dirString);
-  //   let temp = this.node;
-  //   this.node = this.targetNode;
-  //   this.targetNode = temp;
-  // }
-
-  // is pacman's direction opposite of a specified direction?
-  // oppositeDirection(dirString) {
-  //   if (dirString != "STOP") {
-  //     let dir = cc.DIR[dirString];
-  //     let thisdir = cc.DIR[this.dirString];
-  //     if (dir == thisdir * -1) {
-  //       return true;
-  //     }
-  //   }
-  //   return false;
-  // }
   
   overshotTarget() {
     if (this.targetNode != null) {
@@ -117,30 +98,18 @@ class Pacman extends Entity {
     return false;
   }
 
-  // use validDirection(..) in entity.js instead of this one
-  // since entity.js function uses the access array & this one does not
-  // validDirection(dirString) {
-  //   if (dirString != "STOP") {
-  //     if (this.node.neighborNodes[dirString] != null) {
-  //       return true;
-  //     }
-  //   }
-  //   return false;
-  // }
-
-  // getNewTarget(dirString) {
-  //   if (this.validDirection(dirString)) return this.node.neighborNodes[dirString];
-  //   return this.node;
-  // }
-
   render = () => {
     if (this.visible) {
-      let p = this.positionVector.asInt();  // returns object
-      fill(this.color);
-      circle(p.x, p.y, this.diam);
+        const p = this.positionVector.asInt();
+        if (this.image != null) {
+            image(this.image, p.x, p.y);
+        } else {
+             fill(this.color);
+            circle(p.x, p.y, this.diam);
+        }
     }
   }
-  
+
   getValidKey = () => {
     if (keyIsDown(UP_ARROW))    return "UP";
     if (keyIsDown(DOWN_ARROW))  return "DOWN";

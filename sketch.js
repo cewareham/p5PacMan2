@@ -2,9 +2,9 @@ let game;
 
 function preload() {
   // load all images in cc.sprites array giving them name of 1st property
-  // for (const property in cc.sprites) {
-  //   cc[property] = loadImage(cc.sprites[property]["path"]);
-  // }
+  for (const property in cc.sprites) {
+    cc[property] = loadImage(cc.sprites[property]["path"]);
+  }
   for (const property in cc.fonts) {
     cc[property] = loadFont(cc.fonts[property]["path"]);
   }

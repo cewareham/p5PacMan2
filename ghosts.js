@@ -69,6 +69,7 @@ class Blinky extends Ghost {
         super(node, pacman, blinky);
         this.name = "BLINKY";
         this.color = cc.RED;
+        this.sprites = new GhostSprites(this);
     }
 }
 
@@ -77,6 +78,7 @@ class Pinky extends Ghost {
         super(node, pacman, blinky);
         this.name = "PINKY";
         this.color = cc.PINK;
+        this.sprites = new GhostSprites(this);
     }
 
     scatter() {
@@ -94,6 +96,7 @@ class Inky extends Ghost {
         super(node, pacman, blinky);
         this.name = "INKY";
         this.color = cc.TEAL;
+        this.sprites = new GhostSprites(this);
     }
 
     scatter() {
@@ -115,6 +118,7 @@ class Clyde extends Ghost {
         super(node, pacman, blinky);
         this.name = "CLYDE";
         this.color = cc.ORANGE;
+        this.sprites = new GhostSprites(this);
     }
 
     scatter() {
@@ -143,56 +147,56 @@ class GhostGroup {
     }
 
     update = (dt) => {
-        for (let ghost of this.ghosts) {
+        for (const ghost of this.ghosts) {
             ghost.update(dt)
         }
     }
 
     startFreight() {
-        for (let ghost of this.ghosts) {
+        for (const ghost of this.ghosts) {
             ghost.startFreight()
         }
         this.resetPoints();
     }
 
     setSpawnNode(node) {
-        for (let ghost of this.ghosts) {
+        for (const ghost of this.ghosts) {
             ghost.setSpawnNode(node);
         }
     }
 
     updatePoints() {
-        for (let ghost of this.ghosts) {
+        for (const ghost of this.ghosts) {
             ghost.points *= 2;
         }
     }
 
     resetPoints() {
-        for (let ghost of this.ghosts) {
+        for (const ghost of this.ghosts) {
             ghost.points = 200;
         }
     }
 
     reset() {
-        for (let ghost of this.ghosts) {
+        for (const ghost of this.ghosts) {
             ghost.reset();
         }
     }
 
     hide() {
-        for (let ghost of this.ghosts) {
+        for (const ghost of this.ghosts) {
             ghost.visible = false;
         }
     }
 
     show() {
-        for (let ghost of this.ghosts) {
+        for (const ghost of this.ghosts) {
             ghost.visible = true;
         }
     }
 
     render = () => {
-        for (let ghost of this.ghosts) {
+        for (const ghost of this.ghosts) {
             ghost.render();
         }
     }

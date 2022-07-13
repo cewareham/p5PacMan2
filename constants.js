@@ -1,8 +1,8 @@
 let cc = {
-  //sprites: {
+  sprites: {
     // must have full path or p5.js editor won't work here!
-    //  "grass"   : { "path" : "assets/grass.png"},
-  //},
+    "spritesheet"   : { "path" : "spritesheet.png"},
+  },
   //sounds : {
   //  "run_amok" : { "path" : "assets/run_amok.mp3"},
   //},
@@ -10,8 +10,10 @@ let cc = {
     "pressfont" : { "path" : "PressStart2P-Regular.ttf"},
   },
   
-  TILEWIDTH    : 16,
-  TILEHEIGHT   : 16,
+  TILEWIDTH      : 16,
+  TILEHEIGHT     : 16,
+  BASETILEWIDTH  : 16,
+  BASETILEHEIGHT : 16,
   NROWS        : 36,
   NCOLS        : 28,
   SCREENWIDTH  : -1,  // placeholder, calc'ed below
