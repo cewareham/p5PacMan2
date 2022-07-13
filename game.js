@@ -8,6 +8,7 @@ class Game {
     this.lives = 5;
     this.score = 0;
     this.textgroup = new TextGroup();
+    this.lifesprites = new LifeSprites(this.lives);
   }
 
   update = () => {
@@ -43,6 +44,12 @@ class Game {
     this.pacman.render();
     this.ghosts.render();
     this.textgroup.render();
+    // draw lives images
+    for (let ii=0; ii<this.lifesprites.images.length; ii++) {
+      const x = this.lifesprites.images[ii].width * ii;
+      const y = cc.SCREENHEIGHT - this.lifesprites.images[ii].height;
+      image(this.lifesprites.images[ii], x, y);
+    }
   }
 
   restartGame() {
@@ -55,6 +62,7 @@ class Game {
     game.textgroup.updateScore(game.score);
     game.textgroup.updateLevel(game.level);
     game.textgroup.showText(cc.READYTXT);
+    game.lifesprites.resetLives(game.lives);
   }
 
   resetLevel() {
@@ -181,6 +189,7 @@ class Game {
         } else if (ghost.mode.current != cc.SPAWN) {
           if (this.pacman.alive) {
             this.lives--;
+            this.lifesprites.removeImage();
             this.pacman.die();
             this.ghosts.hide();
             if (this.lives <= 0) {

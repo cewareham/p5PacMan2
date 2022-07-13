@@ -59,3 +59,26 @@ class FruitSprites extends Spritesheet {
         return super.getImage(x, y, 2*cc.TILEWIDTH, 2*cc.TILEHEIGHT);
     }
 }
+
+class LifeSprites extends Spritesheet {
+    constructor(numlives) {
+        super();
+        this.images = [];
+        this.resetLives(numlives);
+    }
+
+    removeImage() {
+        if (this.images.length > 0)
+            this.images.pop();
+    }
+
+    resetLives(numlives) {
+        this.images = [];
+        for (let ii=0; ii<numlives; ii++)
+            this.images.push(this.getImage(0,0));
+    }
+
+    getImage(x, y) {
+        return super.getImage(x, y, 2*cc.TILEWIDTH, 2*cc.TILEHEIGHT);
+    }
+}
