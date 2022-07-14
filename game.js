@@ -1,7 +1,7 @@
 class Game {
   constructor() {
     this.lastdT = 0;
-    this.startGame();
+    this.bg = null;   // must come before call to startGame()
     this.fruit = null;
     this.pause = new Pause(true);
     this.level = 0;
@@ -37,7 +37,8 @@ class Game {
   }
   
   render = () => {
-    background(cc.BLACK);
+    //background(cc.BLACK);
+    image(this.bg, 0, 0);
     this.nodes.render();
     this.pellets.render();
     if (this.fruit !=  null) this.fruit.render();
@@ -73,7 +74,17 @@ class Game {
     game.textgroup.showText(cc.READYTXT);
   }
 
+  setBackground() {
+    // create offscreen buffer the size of the maze
+    if (this.bg == null)
+      this.bg = createGraphics(cc.SCREENWIDTH, cc.SCREENHEIGHT);
+    this.bg.background(cc.BLACK);
+  }
+
   startGame() {
+    this.setBackground();
+    this.mazesprites = new MazeSprites(maze1);
+    this.bg = this.mazesprites.constructBackground(this.bg, this.level%5);
     // BEGIN GameController class startGame() code (in python version)
     this.nodes = new NodeGroup(maze1);
     this.nodes.setPortalPair({x:0, y:17}, {x:27, y:17});

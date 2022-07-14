@@ -17,6 +17,7 @@ function preload() {
 function setup() {
   createCanvas(cc.SCREENWIDTH, cc.SCREENHEIGHT);
   game = new Game();
+  game.startGame();
 }
 
 function draw() {
