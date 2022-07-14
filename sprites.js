@@ -84,9 +84,10 @@ class LifeSprites extends Spritesheet {
 }
 
 class MazeSprites extends Spritesheet {
-    constructor(maze) {
+    constructor(maze, rotationArray) {
         super();
         this.data = maze;
+        this.rotdata = rotationArray;
     }
 
     getImage(x, y) {
@@ -97,14 +98,32 @@ class MazeSprites extends Spritesheet {
         let isdigit = function(char) {
             return !isNaN(char);
         }
+        // rotate image in offscreen buffer & return it
+        let getRotatedImage = function(img, angle) {
+            const ww = img.width;
+            const hh = img.height;
+            let bufr = createGraphics(ww, hh);
+            bufr.push();
+            bufr.angleMode(DEGREES);
+            bufr.imageMode(CENTER)
+            bufr.translate(ww/2, hh/2);
+            bufr.rotate(angle);
+            bufr.image(img, 0, 0);
+            bufr.pop();
+            let rotImg = bufr.get(0, 0, ww, hh);
+            return rotImg;
+        }
         for (let row=0; row<this.data.length; row++) {
-            const theRow = this.data[row];
+            const mazeRow = this.data[row];
+            const rotRow = this.rotdata[row];
             let sprite;
             for (let col=0; col<this.data[0].length; col++) {
-                const char = theRow.charAt(col);
+                const char = mazeRow.charAt(col);
                 if (isdigit(char)) {
                     const x = parseInt(char) + 12;
                     sprite = this.getImage(x, y);
+                    const rotval = parseInt(rotRow.charAt(col));
+                    if (rotval != 0) sprite = getRotatedImage(sprite, -rotval*90);
                     bg.image(sprite, col*cc.TILEWIDTH, row*cc.TILEHEIGHT);
                 } else if (char == '=') {
                     sprite = this.getImage(10, 8);

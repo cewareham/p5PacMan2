@@ -3,16 +3,18 @@ class Pellet {
         this.name = "PELLET";
         this.position = new Vector2(column*cc.TILEWIDTH, row*cc.TILEHEIGHT);
         this.color = cc.WHITE;
-        this.radius = (4 * cc.TILEWIDTH / 16)|0;
+        this.radius = (2 * cc.TILEWIDTH / 16)|0;
         this.diam = this.radius*2;
-        this.collideRadius = (4 * cc.TILEWIDTH / 16)|0;
+        this.collideRadius = (2 * cc.TILEWIDTH / 16)|0;
         this.points = 10;
         this.visible = true;
     }
 
     render = () => {
         if (this.visible) {
-            let p = this.position.asInt();
+            const adjust = new Vector2(cc.TILEWIDTH, cc.TILEHEIGHT).div(2);
+            let p = this.position.add(adjust);
+            p = p.asInt();
             push();
             fill(this.color);
             noStroke();

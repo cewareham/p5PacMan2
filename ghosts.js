@@ -29,7 +29,7 @@ class Ghost extends Entity {
     }
 
     chase() {
-        this.goalVector = this.pacman.positionVector;
+        this.goalVector = this.pacman.position;
     }
 
     startFreight() {
@@ -86,7 +86,7 @@ class Pinky extends Ghost {
     }
 
     chase() {
-        this.goalVector = this.pacman.positionVector.add(this.pacman.dirVectors[this.pacman.dirString]);
+        this.goalVector = this.pacman.position.add(this.pacman.dirVectors[this.pacman.dirString]);
         this.goalVector = this.goalVector.mul(cc.TILEWIDTH * 4);
     }
 }
@@ -104,7 +104,7 @@ class Inky extends Ghost {
     }
 
     chase() {
-        let vec1 = this.pacman.positionVector.add(this.pacman.dirVectors[this.pacman.dirString]);
+        let vec1 = this.pacman.position.add(this.pacman.dirVectors[this.pacman.dirString]);
         vec1 = vec1.mul(cc.TILEWIDTH * 2);
         let bPos = this.blinky.position;
         let vec2 = vec1.sub(bPos);
@@ -126,12 +126,12 @@ class Clyde extends Ghost {
     }
 
     chase() {
-        let d = this.pacman.positionVector.sub(this.position);
+        let d = this.pacman.position.sub(this.position);
         let ds = d.magnitudeSquared();
         if (ds <= Math.pow(cc.TILEWIDTH*8, 2)) {
             this.scatter()
         } else {
-            this.goalVector = this.pacman.positionVector.add(this.pacman.dirVectors[this.pacman.dirString]);
+            this.goalVector = this.pacman.position.add(this.pacman.dirVectors[this.pacman.dirString]);
             this.goalVector = this.goalVector.mul(cc.TILEWIDTH * 4);    
         }
     }

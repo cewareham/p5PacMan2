@@ -48,7 +48,7 @@ class Vector2 {
     return {x:this.x, y:this.y};
   }
   asInt() {
-    // python int() truncates decimal portion so we us JS floor()
+    // python int() truncates decimal portion so we use JS floor()
     return {x:Math.floor(this.x), y:Math.floor(this.y)};
     //return {x:parseInt(this.x), y:parseInt(this.y)};
     //return {x:this.x, y:this.y};

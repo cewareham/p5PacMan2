@@ -81,11 +81,14 @@ class Entity {
     
     render = () => {
         if (this.visible) {
-            const p = this.position.asInt();
             if (this.image != null) {
+                const adjust = new Vector2(cc.TILEWIDTH, cc.TILEHEIGHT).div(2);
+                let p = this.position.sub(adjust);
+                p = p.asTuple();
                 image(this.image, p.x, p.y);
             } else {
-               fill(this.color);
+                const p = this.position.asInt();
+                fill(this.color);
                 circle(p.x, p.y, this.diam);
             }
         }

@@ -48,7 +48,7 @@ class Pacman extends Entity {
   }
 
   collideCheck(other) {
-    let d = this.positionVector.sub(other.position);
+    let d = this.position.sub(other.position);
     let dSquared = d.magnitudeSquared();
     let rSquared = Math.pow(this.collideRadius + other.collideRadius, 2);
     if (dSquared <= rSquared) return true;
@@ -56,7 +56,7 @@ class Pacman extends Entity {
   }
 
   setPosition() {
-    this.positionVector = this.node.position.cpy();
+    this.position = this.node.position.cpy();
   }
 
   getDirectionVector(dirString) {
@@ -67,7 +67,7 @@ class Pacman extends Entity {
     let dirVector = this.getDirectionVector(this.dirString);
     let dPos = dirVector.mul(this.speed);
     dPos = dPos.mul(dt);
-    this.positionVector = this.positionVector.add(dPos);
+    this.position = this.position.add(dPos);
     let dirString = this.getValidKey();
     if (this.overshotTarget()) {
       this.node = this.targetNode;
@@ -90,24 +90,12 @@ class Pacman extends Entity {
   overshotTarget() {
     if (this.targetNode != null) {
       let vec1 = (this.targetNode.position).sub(this.node.position);
-      let vec2 = (this.positionVector).sub(this.node.position);
+      let vec2 = (this.position).sub(this.node.position);
       let node2Target = vec1.magnitudeSquared();
       let node2Self = vec2.magnitudeSquared();
       return node2Self >= node2Target;
     }
     return false;
-  }
-
-  render = () => {
-    if (this.visible) {
-        const p = this.positionVector.asInt();
-        if (this.image != null) {
-            image(this.image, p.x, p.y);
-        } else {
-             fill(this.color);
-            circle(p.x, p.y, this.diam);
-        }
-    }
   }
 
   getValidKey = () => {

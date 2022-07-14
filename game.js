@@ -39,7 +39,7 @@ class Game {
   render = () => {
     //background(cc.BLACK);
     image(this.bg, 0, 0);
-    this.nodes.render();
+    //this.nodes.render();
     this.pellets.render();
     if (this.fruit !=  null) this.fruit.render();
     this.pacman.render();
@@ -83,7 +83,7 @@ class Game {
 
   startGame() {
     this.setBackground();
-    this.mazesprites = new MazeSprites(maze1);
+    this.mazesprites = new MazeSprites(maze1, maze1_rotation);
     this.bg = this.mazesprites.constructBackground(this.bg, this.level%5);
     // BEGIN GameController class startGame() code (in python version)
     this.nodes = new NodeGroup(maze1);
