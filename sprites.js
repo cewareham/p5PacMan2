@@ -34,12 +34,20 @@ class PacmanSprites extends Spritesheet {
         this.animations["RIGHT"] = new Animator([{x:10, y:0}, {x:2, y:0}, {x:2, y:2}, {x:2, y:0}]);
         this.animations["UP"]    = new Animator([{x:10, y:2}, {x:6, y:0}, {x:6, y:2}, {x:6, y:0}]);
         this.animations["DOWN"]  = new Animator([{x:8, y:2}, {x:4, y:0}, {x:4, y:2}, {x:4, y:0}]);
+        this.animations["DEATH"] = new Animator([{x:0, y:12},  {x:2, y:12},  {x:4, y:12},  {x:6, y:12},
+                                                 {x:8, y:12},  {x:10, y:12}, {x:12, y:12}, {x:14, y:12},
+                                                 {x:16, y:12}, {x:18, y:12}, {x:20, y:12}
+                                                ], 6, false);
     }
 
     update(dt) {
         let frame;
-        if (this.entity.dirString != "STOP") frame = this.animations[this.entity.dirString].update(dt);
-        else frame = this.stopimage;    // author sets stopimage to 4 diff sprites but they're all the same!
+        if (this.entity.alive) {
+            if (this.entity.dirString != "STOP") frame = this.animations[this.entity.dirString].update(dt);
+            else frame = this.stopimage;    // author sets stopimage to 4 diff sprites but they're all the same!
+        } else {
+            frame = this.animations["DEATH"].update(dt);
+        }
         this.entity.image = this.getImage(frame.x, frame.y);
     }
 

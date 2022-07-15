@@ -20,13 +20,19 @@ class Game {
     this.textgroup.update(dt);
     this.pellets.update(dt);
     if (!this.pause.paused) {
-      this.pacman.update(dt);
       this.ghosts.update(dt);
       if (this.fruit != null) this.fruit.update(dt);
       this.checkPelletEvents();
       this.checkGhostEvents();
       this.checkFruitEvents();
     }
+
+    if (this.pacman.alive) {
+      if (!this.pause.paused) this.pacman.update(dt);
+    } else {
+      this.pacman.update(dt);
+    }
+
     const afterPauseMethod = this.pause.update(dt);
     if (afterPauseMethod != null) afterPauseMethod(dt);
   }

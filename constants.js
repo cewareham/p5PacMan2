@@ -14,6 +14,7 @@ let cc = {
   TILEHEIGHT     : 16,
   BASETILEWIDTH  : 16,
   BASETILEHEIGHT : 16,
+  DEATH        : 5,
   NROWS        : 36,
   NCOLS        : 28,
   SCREENWIDTH  : -1,  // placeholder, calc'ed below

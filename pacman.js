@@ -27,6 +27,8 @@ class Pacman extends Entity {
     this.dirString = "LEFT";
     this.setBetweenNodes("LEFT");
     this.alive = true;
+    this.image = this.sprites.getStartImage();
+    this.sprites.reset();
   }
 
   die() {
