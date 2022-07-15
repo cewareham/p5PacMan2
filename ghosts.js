@@ -18,6 +18,7 @@ class Ghost extends Entity {
     }
 
     update = (dt) => {
+        this.sprites.update(dt);
         this.mode.update(dt);
         if (this.mode.current == cc.SCATTER) this.scatter();
         else if (this.mode.current == cc.CHASE) this.chase();

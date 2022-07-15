@@ -64,6 +64,28 @@ class GhostSprites extends Spritesheet {
     getImage(x, y) {
         return super.getImage(x, y, 2*cc.TILEWIDTH, 2*cc.TILEHEIGHT);
     }
+
+    update(dt) {
+        let x = this.x[this.entity.name];
+        let y;
+        const ary = [cc.SCATTER, cc.CHASE];
+        if (ary.includes(this.entity.mode.current)) {
+            if (this.entity.dirString == "LEFT")       y = 8;
+            else if (this.entity.dirString == "RIGHT") y = 10;
+            else if (this.entity.dirString == "DOWN")  y = 6;
+            else if (this.entity.dirString == "UP")    y = 4;
+            this.entity.image = this.getImage(x, y);
+        } else if (this.entity.mode.current == cc.FREIGHT) {
+            this.entity.image = this.getImage(10, 4);
+        } else if (this.entity.mode.current == cc.SPAWN) {
+            x = 8;
+            if (this.entity.dirString == "LEFT")       y = 8;
+            else if (this.entity.dirString == "RIGHT") y = 10;
+            else if (this.entity.dirString == "DOWN")  y = 6;
+            else if (this.entity.dirString == "UP")    y = 4;
+            this.entity.image = this.getImage(x, y);
+        }
+    }
 }
 
 class FruitSprites extends Spritesheet {
