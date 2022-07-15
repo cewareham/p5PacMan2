@@ -64,6 +64,7 @@ class Pacman extends Entity {
   }
   
   update = (dt) => {
+    this.sprites.update(dt);
     let dirVector = this.getDirectionVector(this.dirString);
     let dPos = dirVector.mul(this.speed);
     dPos = dPos.mul(dt);

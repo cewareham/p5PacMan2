@@ -16,6 +16,9 @@ class PacmanSprites extends Spritesheet {
         super();
         this.entity = entity;
         this.entity.image = this.getStartImage();
+        this.animations = {};
+        this.defineAnimations();
+        this.stopimage = {x:8, y:0};
     }
 
     getStartImage() {
@@ -24,6 +27,25 @@ class PacmanSprites extends Spritesheet {
 
     getImage(x, y) {
         return super.getImage(x, y, 2*cc.TILEWIDTH, 2*cc.TILEHEIGHT);
+    }
+
+    defineAnimations() {
+        this.animations["LEFT"]  = new Animator([{x:8, y:0}, {x:0, y:0}, {x:0, y:2}, {x:0, y:0}]);
+        this.animations["RIGHT"] = new Animator([{x:10, y:0}, {x:2, y:0}, {x:2, y:2}, {x:2, y:0}]);
+        this.animations["UP"]    = new Animator([{x:10, y:2}, {x:6, y:0}, {x:6, y:2}, {x:6, y:0}]);
+        this.animations["DOWN"]  = new Animator([{x:8, y:2}, {x:4, y:0}, {x:4, y:2}, {x:4, y:0}]);
+    }
+
+    update(dt) {
+        let frame;
+        if (this.entity.dirString != "STOP") frame = this.animations[this.entity.dirString].update(dt);
+        else frame = this.stopimage;    // author sets stopimage to 4 diff sprites but they're all the same!
+        this.entity.image = this.getImage(frame.x, frame.y);
+    }
+
+    reset() {
+        for (const [key, value] of Object.entries(this.animations))
+            value.reset();
     }
 }
 
