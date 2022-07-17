@@ -2,6 +2,8 @@ class Game {
   constructor() {
     this.lastdT = 0;
     this.bg = null;   // must come before call to startGame()
+    this.bg_norm = null;
+    this.bg_flash = null;
     this.fruit = null;
     this.pause = new Pause(true);
     this.level = 0;
@@ -9,6 +11,9 @@ class Game {
     this.score = 0;
     this.textgroup = new TextGroup();
     this.lifesprites = new LifeSprites(this.lives);
+    this.flashBG = false;
+    this.flashTime = 0.2;
+    this.flashTimer = 0;
   }
 
   update = () => {
@@ -31,6 +36,15 @@ class Game {
       if (!this.pause.paused) this.pacman.update(dt);
     } else {
       this.pacman.update(dt);
+    }
+
+    if (this.flashBG) {
+      this.flashTimer += dt;
+      if (this.flashTimer >= this.flashTime) {
+        this.flashTimer = 0;
+        if (this.bg == this.bg_norm) this.bg = this.bg_flash;
+        else this.bg = this.bg_norm;
+      }
     }
 
     const afterPauseMethod = this.pause.update(dt);
@@ -82,15 +96,23 @@ class Game {
 
   setBackground() {
     // create offscreen buffer the size of the maze
-    if (this.bg == null)
-      this.bg = createGraphics(cc.SCREENWIDTH, cc.SCREENHEIGHT);
-    this.bg.background(cc.BLACK);
+    if (this.bg_norm == null) {
+      this.bg_norm = createGraphics(cc.SCREENWIDTH, cc.SCREENHEIGHT);
+    }
+    if (this.bg_flash == null) {
+      this.bg_flash = createGraphics(cc.SCREENWIDTH, cc.SCREENHEIGHT);
+      this.bg_flash.background(cc.BLACK);
+      this.bg_flash = this.mazesprites.constructBackground(this.bg_flash, 5);
+    }
+    this.bg_norm.background(cc.BLACK);
+    this.bg_norm = this.mazesprites.constructBackground(this.bg_norm, this.level%5);
+    this.flashBG = false;
+    this.bg = this.bg_norm;
   }
 
   startGame() {
-    this.setBackground();
     this.mazesprites = new MazeSprites(maze1, maze1_rotation);
-    this.bg = this.mazesprites.constructBackground(this.bg, this.level%5);
+    this.setBackground();
     // BEGIN GameController class startGame() code (in python version)
     this.nodes = new NodeGroup(maze1);
     this.nodes.setPortalPair({x:0, y:17}, {x:27, y:17});
@@ -141,6 +163,7 @@ class Game {
       if (idx > -1) list.splice(idx, 1);
       if (pellet.name == "POWERPELLET") this.ghosts.startFreight();
       if (this.pellets.isEmpty()) {
+        this.flashBG = true;
         this.hideEntities();
         this.pause.setPause(false, 3, this.nextLevel);
       }
