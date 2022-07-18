@@ -97,14 +97,16 @@ class GhostSprites extends Spritesheet {
 }
 
 class FruitSprites extends Spritesheet {
-    constructor(entity) {
+    constructor(entity, level) {
         super();
         this.entity = entity;
-        this.entity.image = this.getStartImage();
+        this.fruits = {0:{x:16,y:8}, 1:{x:18,y:8}, 2:{x:20,y:8}, 3:{x:16,y:10}, 4:{x:18,y:10}, 5:{x:20,y:10}};
+        this.imgNum = level % (Object.keys(this.fruits).length);    // Object.keys(..) returns an array
+        this.entity.image = this.getStartImage(this.imgNum);
     }
 
-    getStartImage() {
-        return this.getImage(16, 8);
+    getStartImage(key) {
+        return this.getImage(this.fruits[key].x, this.fruits[key].y);
     }
 
     getImage(x, y) {

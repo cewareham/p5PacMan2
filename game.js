@@ -1,7 +1,7 @@
 class Game {
   constructor() {
     this.lastdT = 0;
-    this.bg = null;   // must come before call to startGame()
+    this.bg = null;
     this.bg_norm = null;
     this.bg_flash = null;
     this.fruit = null;
@@ -14,6 +14,7 @@ class Game {
     this.flashBG = false;
     this.flashTime = 0.2;
     this.flashTimer = 0;
+    this.fruitCaptured = [];
   }
 
   update = () => {
@@ -57,19 +58,24 @@ class Game {
   }
   
   render = () => {
-    //background(cc.BLACK);
     image(this.bg, 0, 0);
-    //this.nodes.render();
     this.pellets.render();
     if (this.fruit !=  null) this.fruit.render();
     this.pacman.render();
     this.ghosts.render();
     this.textgroup.render();
-    // draw lives images
+    // draw lives images (bottom left)
     for (let ii=0; ii<this.lifesprites.images.length; ii++) {
       const x = this.lifesprites.images[ii].width * ii;
       const y = cc.SCREENHEIGHT - this.lifesprites.images[ii].height;
       image(this.lifesprites.images[ii], x, y);
+    }
+    // draw fruit captured images (bottom right)
+    for (let ii=0; ii<this.fruitCaptured.length; ii++) {
+      const img = this.fruitCaptured[ii].image;
+      const x = cc.SCREENWIDTH - img.width * (ii+1);
+      const y = cc.SCREENHEIGHT - img.height;
+      image(img, x, y);
     }
   }
 
@@ -84,6 +90,7 @@ class Game {
     game.textgroup.updateLevel(game.level);
     game.textgroup.showText(cc.READYTXT);
     game.lifesprites.resetLives(game.lives);
+    game.fruitCaptured = [];
   }
 
   resetLevel() {
@@ -173,13 +180,21 @@ class Game {
   checkFruitEvents() {
     if (this.pellets.numEaten == 50 || this.pellets.numEaten == 140) {
       if (this.fruit == null) {
-        this.fruit = new Fruit(this.nodes.getNodeFromTiles(9, 20));
+        this.fruit = new Fruit(this.nodes.getNodeFromTiles(9, 20), this.level);
       }
     }
     if (this.fruit != null) {
       if (this.pacman.collideCheck(this.fruit)) {
         this.updateScore(this.fruit.points);
         this.textgroup.addText(this.fruit.points.toString(), cc.WHITE, this.fruit.position.x, this.fruit.position.y, 8, 1);
+        let fruitCaptured = false;
+        for (const fruit of this.fruitCaptured) {
+          if (fruit.sprites.imgNum == this.fruit.sprites.imgNum) {
+            fruitCaptured = true;
+            break;
+          }
+        }
+        if (!fruitCaptured) this.fruitCaptured.push(this.fruit);
         this.fruit = null;
       } else if (this.fruit.destroy) {
         this.fruit = null;
