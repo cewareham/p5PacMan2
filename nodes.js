@@ -118,6 +118,12 @@ class NodeGroup {
     return coordx+"-"+coordy;
   }
 
+  // given key like "36-120" return object {x:36, y:120}
+  keyToCoords(key) {
+    let coords = key.split("-");
+    return {x:parseInt(coords[0]), y:parseInt(coords[1])};
+  }
+
   connectHomeNodes(homekey, otherkey, dirString) {
     let coord = this.keyToCoords(otherkey);
     let key = this.constructKey(coord.x, coord.y);
@@ -129,8 +135,8 @@ class NodeGroup {
   setPortalPair(pair1, pair2) {
     let key1 = this.constructKey(pair1.x, pair1.y);
     let key2 = this.constructKey(pair2.x, pair2.y);
-    let keys = Object.keys(this.nodesLUT);
-    if ((keys.indexOf(key1) != -1) && (keys.indexOf(key2) != -1)) {
+    const keysLUT = Object.keys(this.nodesLUT);
+    if (keysLUT.includes(key1) && keysLUT.includes(key2)) {
       this.nodesLUT[key1].neighborNodes["PORTAL"] = this.nodesLUT[key2];
       this.nodesLUT[key2].neighborNodes["PORTAL"] = this.nodesLUT[key1];
     }
@@ -148,12 +154,6 @@ class NodeGroup {
         }
       }
     }
-  }
-
-  // given key like "36-120" return object {x:36, y:120}
-  keyToCoords(key) {
-    let coords = key.split("-");
-    return {x:parseInt(coords[0]), y:parseInt(coords[1])};
   }
 
   connectHorizontally(data, xoffset=0, yoffset=0) {

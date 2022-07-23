@@ -138,10 +138,10 @@ class LifeSprites extends Spritesheet {
 }
 
 class MazeSprites extends Spritesheet {
-    constructor(maze, rotationArray) {
+    constructor(mazeMap, rotationMap) {
         super();
-        this.data = maze;
-        this.rotdata = rotationArray;
+        this.data = mazeMap;
+        this.rotdata = rotationMap;
     }
 
     getImage(x, y) {

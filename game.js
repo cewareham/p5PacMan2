@@ -15,6 +15,70 @@ class Game {
     this.flashTime = 0.2;
     this.flashTimer = 0;
     this.fruitCaptured = [];
+    this.mazedata = new MazeData();
+  }
+
+  startGame() {
+    this.mazedata.loadMaze(this.level);   // create instance->new Maze1 or new Maze2 class
+    const obj = this.mazedata.obj;
+    const maze = obj.maze;
+    const mazeRot = obj.mazeRot;
+    this.mazesprites = new MazeSprites(maze, mazeRot);
+    this.setBackground();
+    // BEGIN GameController class startGame() code (in python version)
+    this.nodes = new NodeGroup(maze);
+    obj.setPortalPairs(this.nodes);
+    obj.connectHomeNodes(this.nodes);
+    const pms = obj.pacmanStart;
+    this.pacman = new Pacman(this.nodes.getNodeFromTiles(pms.x, pms.y));
+    this.pellets = new PelletGroup(maze);
+    this.ghosts = new GhostGroup(this.nodes.getStartTempNode(), this.pacman);
+    let aof = obj.addOffset(2,3);
+    this.ghosts.pinky.setStartNode(this.nodes.getNodeFromTiles(aof.x, aof.y));
+    aof = obj.addOffset(0, 3);
+    this.ghosts.inky.setStartNode(this.nodes.getNodeFromTiles(aof.x, aof.y));
+    aof = obj.addOffset(4, 3);
+    this.ghosts.clyde.setStartNode(this.nodes.getNodeFromTiles(aof.x, aof.y));
+    aof = obj.addOffset(2,3);
+    this.ghosts.setSpawnNode(this.nodes.getNodeFromTiles(aof.x, aof.y));
+    aof = obj.addOffset(2, 0);
+    this.ghosts.blinky.setStartNode(this.nodes.getNodeFromTiles(aof.x, aof.y));
+    // END GameController class startGame() code (in python version)
+    this.nodes.denyHomeAccess(this.pacman);
+    this.nodes.denyHomeAccessList(this.ghosts.ghosts);
+    this.ghosts.inky.startNode.denyAccess("RIGHT", this.ghosts.inky);
+    this.ghosts.clyde.startNode.denyAccess("LEFT", this.ghosts.clyde);
+    obj.denyGhostsAccess(this.ghosts.ghosts, this.nodes);
+  }
+
+  startGameOLD() {
+    this.mazesprites = new MazeSprites(maze1, maze1_rotation);
+    this.setBackground();
+    // BEGIN GameController class startGame() code (in python version)
+    this.nodes = new NodeGroup(maze1);
+    this.nodes.setPortalPair({x:0, y:17}, {x:27, y:17});
+    let homekey = this.nodes.createHomeNodes(11.5, 14);
+    this.nodes.connectHomeNodes(homekey, "12-14", "LEFT");
+    this.nodes.connectHomeNodes(homekey, "15-14", "RIGHT");
+    this.pacman = new Pacman(this.nodes.getNodeFromTiles(15, 26));
+    this.pellets = new PelletGroup(maze1);
+    this.ghosts = new GhostGroup(this.nodes.getStartTempNode(), this.pacman);
+    this.ghosts.blinky.setStartNode(this.nodes.getNodeFromTiles(2+11.5, 0+14));
+    this.ghosts.pinky.setStartNode(this.nodes.getNodeFromTiles(2+11.5, 3+14));
+    this.ghosts.inky.setStartNode(this.nodes.getNodeFromTiles(0+11.5, 3+14));
+    this.ghosts.clyde.setStartNode(this.nodes.getNodeFromTiles(4+11.5, 3+14));
+    this.ghosts.setSpawnNode(this.nodes.getNodeFromTiles(2+11.5, 3+14));
+    // END GameController class startGame() code (in python version)
+    this.nodes.denyHomeAccess(this.pacman);
+    this.nodes.denyHomeAccessList(this.ghosts.ghosts);
+    this.nodes.denyAccessList(2+11.5, 3+14, "LEFT", this.ghosts.ghosts);
+    this.nodes.denyAccessList(2+11.5, 3+14, "RIGHT", this.ghosts.ghosts);
+    this.ghosts.inky.startNode.denyAccess("RIGHT", this.ghosts.inky);
+    this.ghosts.clyde.startNode.denyAccess("LEFT", this.ghosts.clyde);
+    this.nodes.denyAccessList(12, 14, "UP", this.ghosts.ghosts);
+    this.nodes.denyAccessList(15, 14, "UP", this.ghosts.ghosts);
+    this.nodes.denyAccessList(12, 26, "UP", this.ghosts.ghosts);
+    this.nodes.denyAccessList(15, 26, "UP", this.ghosts.ghosts);
   }
 
   update = () => {
@@ -115,36 +179,6 @@ class Game {
     this.bg_norm = this.mazesprites.constructBackground(this.bg_norm, this.level%5);
     this.flashBG = false;
     this.bg = this.bg_norm;
-  }
-
-  startGame() {
-    this.mazesprites = new MazeSprites(maze1, maze1_rotation);
-    this.setBackground();
-    // BEGIN GameController class startGame() code (in python version)
-    this.nodes = new NodeGroup(maze1);
-    this.nodes.setPortalPair({x:0, y:17}, {x:27, y:17});
-    let homekey = this.nodes.createHomeNodes(11.5, 14);
-    this.nodes.connectHomeNodes(homekey, "12-14", "LEFT");
-    this.nodes.connectHomeNodes(homekey, "15-14", "RIGHT");
-    this.pacman = new Pacman(this.nodes.getNodeFromTiles(15, 26));
-    this.pellets = new PelletGroup(maze1);
-    this.ghosts = new GhostGroup(this.nodes.getStartTempNode(), this.pacman);
-    this.ghosts.blinky.setStartNode(this.nodes.getNodeFromTiles(2+11.5, 0+14));
-    this.ghosts.pinky.setStartNode(this.nodes.getNodeFromTiles(2+11.5, 3+14))
-    this.ghosts.inky.setStartNode(this.nodes.getNodeFromTiles(0+11.5, 3+14))
-    this.ghosts.clyde.setStartNode(this.nodes.getNodeFromTiles(4+11.5, 3+14))
-    this.ghosts.setSpawnNode(this.nodes.getNodeFromTiles(2+11.5, 3+14));
-    // END GameController class startGame() code (in python version)
-    this.nodes.denyHomeAccess(this.pacman);
-    this.nodes.denyHomeAccessList(this.ghosts.ghosts);
-    this.nodes.denyAccessList(2+11.5, 3+14, "LEFT", this.ghosts.ghosts);
-    this.nodes.denyAccessList(2+11.5, 3+14, "RIGHT", this.ghosts.ghosts);
-    this.ghosts.inky.startNode.denyAccess("RIGHT", this.ghosts.inky);
-    this.ghosts.clyde.startNode.denyAccess("LEFT", this.ghosts.clyde);
-    this.nodes.denyAccessList(12, 14, "UP", this.ghosts.ghosts);
-    this.nodes.denyAccessList(15, 14, "UP", this.ghosts.ghosts);
-    this.nodes.denyAccessList(12, 26, "UP", this.ghosts.ghosts);
-    this.nodes.denyAccessList(15, 26, "UP", this.ghosts.ghosts);
   }
 
   nextLevel() {
